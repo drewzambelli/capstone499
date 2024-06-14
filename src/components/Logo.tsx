@@ -2,13 +2,11 @@ import React from 'react'
 import IMAGES from './img/images'
 function Logo() {
   return (
-    <div className='flex justify-center w-full text-center text-white font-modak text-6xl py-1 pt-2'>
-    Locally
+    <div className='lg:flex justify-center w-full text-center text-white font-modak text-6xl pt-2 pl-14'>
     <img 
-        src= {IMAGES.marker}
-        width={60}
-        height={30}
-        className= 'align-top'
+        src= {IMAGES.logo}
+        height={900}
+        className= 'w-25'
         />{' '}
     </div>
   )

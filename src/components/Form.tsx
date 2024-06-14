@@ -4,8 +4,8 @@ import { Button, Form, InputGroup } from 'react-bootstrap'
 
 function FormLocal() {
   return (
-    <div className='flex'>
-      <InputGroup className='mb-3'>
+    <div className='flex justify-center items-center '>
+      <InputGroup className='lg:flex mb-3 h-50 min-h-5'>
         <InputGroup.Text className='text-black' id="location">🔍</InputGroup.Text>
         <Form.Control
           placeholder='Enter Location'

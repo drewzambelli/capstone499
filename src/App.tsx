@@ -1,19 +1,20 @@
-import React from "react"
-import { APIProvider, Map } from "@vis.gl/react-google-maps"
-import NavbarLocal from "./components/NavbarLocal"
-import env from "./env/env"
-import MainLocal from "./components/GoogleMap"
+import { Container, Row, Col } from "react-bootstrap"
 import GoogleMap from "./components/GoogleMap"
 import Header from "./components/Header"
-
+import Chat from "./components/Chat"
 function App() {
   return (
-    <>
+    <div className="">
       <Header/>
-      <GoogleMap>
-        <div></div>
-      </GoogleMap>
-    </>
+      <Container fluid className="">
+        <Row >
+          <Col className="p-0 flex ">
+            <GoogleMap/>
+            <Chat/>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   )
 }
 
