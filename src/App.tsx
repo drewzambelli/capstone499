@@ -2,12 +2,18 @@ import React from "react"
 import { APIProvider, Map } from "@vis.gl/react-google-maps"
 import NavbarLocal from "./components/NavbarLocal"
 import env from "./env/env"
-import MainLocal from "./components/MainLocal"
+import MainLocal from "./components/GoogleMap"
+import GoogleMap from "./components/GoogleMap"
+import Header from "./components/Header"
+
 function App() {
   return (
-  <MainLocal>
-    <div></div>
-  </MainLocal>
+    <>
+      <Header/>
+      <GoogleMap>
+        <div></div>
+      </GoogleMap>
+    </>
   )
 }
 

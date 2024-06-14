@@ -5,7 +5,7 @@ function NavbarLocal() {
   return (
     <Navbar expand="lg" className='bg-body-tertiary bg-black'>
         <Container>
-            <Navbar.Brand href='/' className='flex justify-center w-full text-center text-white font-modak text-6xl py-1 pt-2'>
+            <div className='flex justify-center w-full text-center text-white font-modak text-6xl py-1 pt-2'>
             Locally
             <img 
                 src= {IMAGES.marker}
@@ -13,7 +13,7 @@ function NavbarLocal() {
                 height={30}
                 className= 'align-top'
                 />{' '}
-            </Navbar.Brand>
+            </div>
         </Container>
     </Navbar>
 )

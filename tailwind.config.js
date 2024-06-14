@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily:{
         modak: ['Modak', 'system-ui'],
+        Roboto: ["Roboto", "sans-serif"]
       }
     },
   },
