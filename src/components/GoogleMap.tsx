@@ -12,7 +12,7 @@ const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'custom', label: 'Custom Build'},
   {id: 'custom-hybrid', label: 'Custom w/ Select Widget'}
 ];
-//Original key  apiKey={env.GOOGLE_MAPS_API_KEY}   Drew KEY: AIzaSyBMM-pH71cX9MWg-AJz9crr9naEZKVg-68
+//Original key  apiKey={env.GOOGLE_MAPS_API_KEY}   Drew KEY: AIzaSyBMM-pH71cX9MWg-AJz9crr9naEZKVg-68 put this in apiKey value as string
 function GoogleMap() {
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] =
     useState<AutocompleteMode>(autocompleteModes[0]);
