@@ -38,7 +38,7 @@ export const PlaceAutocompleteClassic = ({onPlaceSelect}: Props) => {
         <InputGroup.Text className=' bg-grey text-light' id="location">🔎</InputGroup.Text>
         <Form.Control
           className='bg-dark text-light'
-          placeholder='Enter Location'
+          placeholder="Enter Location"
           aria-label='Location'
           aria-describedby='Location'
           ref={inputRef}
