@@ -12,7 +12,7 @@ const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'custom', label: 'Custom Build'},
   {id: 'custom-hybrid', label: 'Custom w/ Select Widget'}
 ];
-//Original key  apiKey={env.GOOGLE_MAPS_API_KEY}   MY KEY: AIzaSyBMM-pH71cX9MWg-AJz9crr9naEZKVg-68
+//Original key  apiKey={env.GOOGLE_MAPS_API_KEY}   Drew KEY: AIzaSyBMM-pH71cX9MWg-AJz9crr9naEZKVg-68
 function GoogleMap() {
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] =
     useState<AutocompleteMode>(autocompleteModes[0]);
@@ -42,8 +42,8 @@ function GoogleMap() {
     }, []);
   
     return (
-      <>
-        <APIProvider apiKey="AIzaSyBMM-pH71cX9MWg-AJz9crr9naEZKVg-68">
+      <> 
+        <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}>
           <Map
             style={{ width: '75vw', height: '88vh' }}
             defaultCenter={userLocation || { lat: 40.730610, lng: -73.935242 }} // Center on user's location if available
