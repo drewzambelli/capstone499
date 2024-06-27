@@ -8,6 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
+    
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.13",
@@ -19,7 +20,9 @@
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
-    "styled-components": "^6.1.11"
+    "react-scripts": "^5.0.1",
+    "styled-components": "^6.1.11",
+    "typescript": "4.9.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
@@ -33,7 +36,6 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }
 }
