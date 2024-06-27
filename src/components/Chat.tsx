@@ -2,7 +2,6 @@ import React from 'react'
 
 function Chat() {
   return (
-<<<<<<< HEAD
     <div className='w-[25vw] h-full block bg-blue-100'>
       <div className='h-[7vh] bg-gradient-to-r from-bubble-gum to-dark-bubble flex justify-center items-center text-3xl font-Righteous'>Chat Locally</div>
       <div className='h-[82vh] bg-black overflow-hidden'>
@@ -17,9 +16,6 @@ function Chat() {
         </div>
       </div>
     </div>
-=======
-    <div className='w-[25vw] h-100 bg-blue-100'>Chat</div>
->>>>>>> origin/dev
   )
 }
 

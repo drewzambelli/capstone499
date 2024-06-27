@@ -5,7 +5,6 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-<<<<<<< HEAD
     colors:{
       "bubble-gum": "#ff7798",
       "dark-bubble": "#300707"
@@ -15,12 +14,6 @@ export default {
         modak: ['Modak', 'system-ui'],
         Roboto: ["Roboto", "sans-serif"],
         Righteous: ["Righteous", "sans-serif"]
-=======
-    extend: {
-      fontFamily:{
-        modak: ['Modak', 'system-ui'],
-        Roboto: ["Roboto", "sans-serif"]
->>>>>>> origin/dev
       }
     },
   },

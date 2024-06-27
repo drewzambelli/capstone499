@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react'
-<<<<<<< HEAD
 import { APIProvider, Map, MapControl, ControlPosition, Marker } from '@vis.gl/react-google-maps'
 import env from '../env/env'
 import { CustomMapControl } from './auto-components/map-control';
 import MapHandler from './auto-components/MapHandler';
 import IMAGES from './img/images'
-=======
-import { APIProvider, Map, MapControl, ControlPosition } from '@vis.gl/react-google-maps'
-import env from '../env/env'
-import { CustomMapControl } from './auto-components/map-control';
-import MapHandler from './auto-components/MapHandler';
-
->>>>>>> origin/dev
 
 
 export type AutocompleteMode = {id: string; label: string};
@@ -28,11 +20,7 @@ function GoogleMap() {
     const [selectedPlace, setSelectedPlace] =
     useState<google.maps.places.PlaceResult | null>(null);
     //userLocation will attempt to get the user's location so the map opens there
-<<<<<<< HEAD
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number }>({ lat: 40.730610, lng: -73.935242 });
-=======
-    const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
->>>>>>> origin/dev
 
     //If we can get user's location, open there. If not, default to hardcoded NYC coordinates
     useEffect(() => {
@@ -52,7 +40,6 @@ function GoogleMap() {
         console.error('Geolocation is not supported by this browser.');
       }
     }, []);
-<<<<<<< HEAD
 
     return (
       <> 
@@ -69,19 +56,6 @@ function GoogleMap() {
               icon={IMAGES.icon}
               />
           </Map>
-=======
-  
-    return (
-      <> 
-        <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}>
-          <Map
-            style={{ width: '75vw', height: '88vh' }}
-            defaultCenter={userLocation || { lat: 40.730610, lng: -73.935242 }} // Center on user's location if available
-            defaultZoom={17}
-            gestureHandling={'greedy'}
-            disableDefaultUI={true}
-          />
->>>>>>> origin/dev
           <CustomMapControl
             controlPosition={ControlPosition.TOP}
             selectedAutocompleteMode={selectedAutocompleteMode}

@@ -14,18 +14,12 @@
     "@mui/material": "^5.15.20",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@vis.gl/react-google-maps": "^1.0.2",
-<<<<<<< HEAD
     "firebase": "^10.12.2",
-=======
->>>>>>> origin/dev
     "googleapis": "^140.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",
-<<<<<<< HEAD
     "react-firebase-hooks": "^5.1.1",
-=======
->>>>>>> origin/dev
     "react-router-dom": "^6.23.1",
     "styled-components": "^6.1.11"
   },
