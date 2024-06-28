@@ -33,7 +33,7 @@ export const PlaceAutocompleteClassic = ({onPlaceSelect}: Props) => {
   }, [onPlaceSelect, placeAutocomplete]);
 
   return (
-    <div className=''>
+    <div>
       <InputGroup className='search-bar'>
         <InputGroup.Text id="location">🔎</InputGroup.Text>
         <Form.Control
@@ -43,7 +43,6 @@ export const PlaceAutocompleteClassic = ({onPlaceSelect}: Props) => {
           aria-describedby='Location'
           ref={inputRef}
           />
-         {/* <Button variant="dark">Enter</Button> */}
       </InputGroup>
     </div>
   );
