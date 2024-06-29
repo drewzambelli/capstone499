@@ -12,9 +12,14 @@ export type AutocompleteMode = {id: string; label: string};
 
 function App() {
 
+  const handlePlaceSelect = (place: google.maps.places.PlaceResult | null) => {
+    // Logic to handle selected place
+    console.log(place); // Just logging for now, adjust as needed
+  };
+
   return (
     <div  style={{ height: '100vh' }}>
-      <Header />
+      <Header onPlaceSelect={handlePlaceSelect} />
       <GoogleMap />
     </div>
   )
