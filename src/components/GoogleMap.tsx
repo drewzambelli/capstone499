@@ -27,7 +27,6 @@ function GoogleMap() {
   return (
     <> 
       <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}>
-        <Header onPlaceSelect={setSelectedPlace} />
         <Map
           className='map-class'
           defaultCenter={userLocation}

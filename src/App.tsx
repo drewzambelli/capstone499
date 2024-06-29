@@ -14,6 +14,7 @@ function App() {
 
   return (
     <div  style={{ height: '100vh' }}>
+      <Header />
       <GoogleMap />
     </div>
   )
