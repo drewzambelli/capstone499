@@ -1,11 +1,21 @@
-import React from 'react'
-import Logo from './Logo'
-function Header() {
-  return (
-    <header className='bg-black sticky top-0 z-[20] mx-auto w-full item-center flex justify-between border-b border-gray-500 pt-1'>
-        <Logo/>
-    </header>
-  )
+import React from 'react';
+import Logo from './Logo';
+import { PlaceAutocompleteClassic } from './auto-components/autocomplete-classic';
+
+// Define the type for the props expected by the Header component
+interface HeaderProps {
+  onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
 }
 
-export default Header
+function Header({ onPlaceSelect }: HeaderProps) {
+  return (
+    <div className='center-element'>
+      <header className='site-header'>
+        <Logo />
+        <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
+      </header>
+    </div>
+  );
+}
+
+export default Header;

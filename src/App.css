@@ -1,22 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
 @keyframes logo-spin {
   from {
@@ -33,6 +14,8 @@
   }
 }
 
+
+
 .card {
   padding: 2em;
 }
@@ -40,3 +23,51 @@
 .read-the-docs {
   color: #888;
 }
+
+.site-header{
+  width: 60%;
+  min-width: 700px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 50px 0px;
+  margin-top: 15px;
+  z-index: 1000; /* Ensure the header is above the map */
+  background: black; /* Semi-transparent or other styling */
+  border-radius: 80px
+}
+
+.center-element{
+  display: flex;
+  justify-content: center;
+  
+}
+
+.map-class{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.search-bar {
+  display: flex;
+  border-radius: 80px; /* Adjust radius as needed */
+  overflow: hidden; /* Ensures children don't overflow the rounded borders */
+
+}
+
+.search-bar .input-group-text,
+.search-bar .form-control {
+  border-radius: 80px;/* Removes individual border radius settings */
+  background-color: white;
+  
+}
+
+.search-bar .form-control:focus,
+.search-bar .input-group-text:focus {
+  outline: none !important; /* Removes the outline, !important may be necessary to override inline styles or specificity issues */
+  box-shadow: none !important; /* Removes the glow effect */
+}
+

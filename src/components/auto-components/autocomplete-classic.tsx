@@ -33,17 +33,16 @@ export const PlaceAutocompleteClassic = ({onPlaceSelect}: Props) => {
   }, [onPlaceSelect, placeAutocomplete]);
 
   return (
-    <div className='stickyflex justify-center items-center '>
-      <InputGroup className='lg:flex mb-3 h-[7vh] w-[15vw] pt-10'>
-        <InputGroup.Text className=' bg-grey text-light' id="location">🔎</InputGroup.Text>
+    <div>
+      <InputGroup className='search-bar'>
+        <InputGroup.Text id="location">🔎</InputGroup.Text>
         <Form.Control
-          className='bg-dark text-light'
+          className='text-black'
           placeholder="Enter Location"
           aria-label='Location'
           aria-describedby='Location'
           ref={inputRef}
           />
-         {/* <Button variant="dark">Enter</Button> */}
       </InputGroup>
     </div>
   );
