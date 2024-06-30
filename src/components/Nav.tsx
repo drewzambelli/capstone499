@@ -6,7 +6,7 @@ function Nav() {
   return (
     <nav className='w-1/3'>
         <div className="flex justify-between">
-            <FormLocal/>
+          <FormLocal/>
         </div>
     </nav>
   )

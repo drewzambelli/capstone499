@@ -26,7 +26,8 @@ function GoogleMap() {
 
   return (
     <> 
-      <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}>
+      <APIProvider apiKey="AIzaSyBMM-pH71cX9MWg-AJz9crr9naEZKVg-68"> {/*{env.GOOGLE_MAPS_API_KEY}>*/}
+      <Header onPlaceSelect={setSelectedPlace} /> {/*DZ - 6.29.24: THIS LINE CREATES THE HEADER WHICH ACTUALLY WORKS WITH AUTOCOMPLETE/SEARCH */}
         <Map
           className='map-class'
           defaultCenter={userLocation}

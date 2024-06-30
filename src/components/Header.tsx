@@ -11,7 +11,7 @@ function Header({ onPlaceSelect }: HeaderProps) {
   return (
     <div className='center-element'>
       <header className='site-header'>
-        <Logo />
+        <Logo/>
         <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
       </header>
     </div>

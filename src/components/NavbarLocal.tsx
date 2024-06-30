@@ -9,7 +9,7 @@ function NavbarLocal() {
             Locally
             <img 
                 src= {IMAGES.marker}
-                width={60}
+                width={70}
                 height={30}
                 className= 'align-top'
                 />{' '}
