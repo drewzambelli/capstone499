@@ -1,46 +1,44 @@
-// server.js
+require('dotenv').config();
+const { MongoClient } = require("mongodb");
+const express = require('express')
 
-const express = require('express');
-const mysql = require('mysql');
+const app = express()
+const port = 3000
 
-const app = express();
-const port = 5173; //port number
+const user = process.env.MONGO_USERNAME;
+const pass = process.env.MONGO_PASSWORD;
 
-// MySQL Connection
-//TEAM! PLEASE NOTE, YOU MAY NEED TO USE YOUR OWN CREDENTIALS FOR THIS NEXT PART
-//I"VE LABELED LINES 14, 15, 16 JUST IN CASE YOU NEED TO INSERT YOUR OWN STUFF
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'dzambelli', //MySQL username
-  password: 'cappy499', // MySQL password
-  database: 'capstone' // MySQL database name
-});
+const username = encodeURIComponent(user);
+const password = encodeURIComponent(pass);
 
-// Connection to MySQL
-db.connect(err => {
-  if (err) {
-    throw err;
-  }
-  console.log('Connected to MySQL database');
-});
-
-// Endpoint to check if user exists
-app.get('/checkUserExists/:username', (req, res) => {
-  const username = req.params.username;
-  const sql = 'SELECT COUNT(*) AS count FROM locallyusers WHERE username = ?'; //need to insert my variable here regarding the user's name.
-
-  db.query(sql, [username], (err, result) => {
-    if (err) {
-      console.error('Error checking user:', err);
-      res.status(500).send({ error: 'Database error' });
-    } else {
-      const exists = result[0].count > 0;
-      res.send({ exists });
+async function testConnection(){
+    const uri = `mongodb+srv://${username}:${password}@locally-cluster-1.crkbqzb.mongodb.net/?retryWrites=true&w=majority&appName=locally-cluster-1`;
+    console.log(uri)
+    const client = new MongoClient(uri);
+    let conn;
+    try {
+        conn = await client.connect();
+        const database = client.db('capstone')
+        const locally = database.collection('locally')
+        return locally;
+    } catch (e) {
+        console.error(e);
     }
-  });
-});
+}
 
-// Attemp to start server up
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.get('/api/checkUserExists/:username', async (req,res)=>{
+    try{
+        let db = await testConnection();
+        const checkUsername = req.params.username;
+        const query = {username: checkUsername} 
+        const result = await db.findOne(query);
+        if(!result){console.log("NOT THERE")}
+        else console.log(result)
+    }catch(e){
+        console.log(e)
+    }
+})
+
+app.listen(port, ()=>{
+    console.log(`Listening on ${port}`)
+})
