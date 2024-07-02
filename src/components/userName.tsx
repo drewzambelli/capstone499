@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-function UserName(){
+import swal from 'sweetalert'
+
+function UserName (){
   interface UserData {
     userName: string;
     firstName: string;
@@ -29,20 +31,22 @@ function UserName(){
       body: JSON.stringify(userData)
     })
 
+    swal("Thank You for Submitting!", "Welcome to Locally📍",  "success")
     setSubmitted(true);
-
   };
+
 
   if (submitted) {
     return (
-      <div className="username-form">
-        <h2>Thank you for submitting!</h2>
-      </div>
+      <>
+      </>
     );
+    
   }
 
+  
   return (
-    <div className="username-form">
+    <div className={"username-form"}>
       <h2>What should folks call you?</h2>
       <form onSubmit={handleSubmit}>
         <input
