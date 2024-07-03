@@ -28,7 +28,8 @@ function App() {
     <div  style={{ height: '100vh' }}>
       {/*<Header onPlaceSelect={handlePlaceSelect} />*/} {/*DZ 6.29.24: this line was messing up the Google Maps Auto Fill and Search - SEE GOOGLEMAPS.TSX LINE 30*/}
       <UserName/>
-      <GoogleMap />
+      {/* <GoogleMap /> */}
+      <Chat/>
     </div>
   )
 
