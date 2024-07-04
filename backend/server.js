@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { MongoClient } = require("mongodb");
+const { MongoClient, Timestamp } = require("mongodb");
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
@@ -26,6 +26,9 @@ const password = encodeURIComponent(pass);
 app.use(cors());
 app.use(express.json());
 
+
+const connectedUsers = {};
+
 const DataSchema = new mongoose.Schema({
     id: Number,
     username: String,
@@ -34,14 +37,14 @@ const DataSchema = new mongoose.Schema({
     age: Number
 });
 
-const CommentSchema = new mongoose.Schema({
-    id: Number,
+const MessageSchema = new mongoose.Schema({
     username: String,
-    comment: String
-});
+    text: String,
+    timestamp: {type: Date, default:Date.now},
+})
 
 const Data = mongoose.model('Data', DataSchema);
-const Comment = mongoose.model('Comment', CommentSchema);
+const Message = mongoose.model('Message', MessageSchema);
 
 async function getDatabase() {
     const uri = `mongodb+srv://${username}:${password}@locally-cluster-1.crkbqzb.mongodb.net/?retryWrites=true&w=majority&appName=locally-cluster-1`;
@@ -70,28 +73,34 @@ app.get('/api/getPosts', async (req, res) => {
     }
 });
 
+
+app.get('/api/getUser/:id', async(req,res) =>{
+    try{
+        const sID = req.params.id;
+        const database = await getDatabase();
+        const usernames = database.collection('locally-usernames');
+        const result = await usernames.findOne({socketId: sID })
+        res.send(result);
+    }catch(error){
+        console.log(error);
+    }
+})
+
 app.post('/api/postComment', async (req, res) => {
     try {
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
-        const body = req.body;
-        if (body) {
-            console.log(body);
-            const inputComment = {
-                id: await commentsCollection.countDocuments() + 1,
-                username: '',
-                comment: body.comment
-            };
-            const result = await commentsCollection.insertOne(inputComment);
-            io.emit('Comment', inputComment);
-            res.status(200).send(inputComment);
-            console.log(`Data inserted with ID ${result.insertedId}`);
-        }
+        const {username, text} = req.body;
+        const newMessage = new Message({username, text, timestamp: new Date()})
+        const result = await commentsCollection.insertOne(newMessage);
+        io.emit('Comment', newMessage);
+        res.status(200).send(newMessage);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error inserting comment');
     }
 });
+
 
 app.post('/api/postData', async (req, res) => {
     try {
@@ -105,7 +114,8 @@ app.post('/api/postData', async (req, res) => {
                 username: body.userName,
                 firstname: body.firstName,
                 lastname: body.lastName,
-                age: body.age
+                socketId : body.socketID,
+                age: parseInt(body.age)
             };
             const result = await db.insertOne(inputData);
             res.status(200).send(`Data inserted with ID ${result.insertedId}`);
@@ -137,12 +147,29 @@ app.get('/api/checkUserExists/:username', async (req, res) => {
 });
 
 io.on('connection', (socket) => {
+    disconnectAllUsers();
     console.log('A user connected:', socket.id);
+    connectedUsers [socket.id] = socket;
+    if(Object.keys(connectedUsers).length > 100){
+        console.log("Too many users... Disconnecting all users.");
+    }
+
     socket.on('disconnect', () => {
-        console.log('A user disconnected:', socket.id);
+        console.log('Disconnecting...', socket.id);
+        delete connectedUsers[socket.id]
     });
 });
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
+// Function to disconnect all users
+function disconnectAllUsers() {
+    Object.keys(connectedUsers).forEach(socketId => {
+        connectedUsers[socketId].disconnect(true);
+        delete connectedUsers[socketId];
+    });
+    console.log('All users disconnected');
+}
+
+

@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert'
+import io from "socket.io-client"
+import FormRange from 'react-bootstrap/FormRange'
+import { Form } from 'react-bootstrap';
+const socket = io("http://localhost:3000");
 
 function UserName (){
   interface UserData {
@@ -7,15 +11,27 @@ function UserName (){
     firstName: string;
     lastName: string;
     age: number;
+    socketID: string | undefined; 
   }
   const [userData, setUserData] = useState<UserData>({
     userName: '',
     firstName: '',
     lastName: '',
     age: 0,
+    socketID: "",
   })
 
   const [submitted, setSubmitted] = useState<Boolean>(false);
+
+
+  useEffect(()=>{
+    socket.on('connect', ()=>{
+      console.log("Socket connected in username: ", socket.id);
+       setUserData(prevState =>({...prevState, socketID: socket.id}));
+    });
+
+    return ()=>{socket.off('connect')}
+  })
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -31,7 +47,7 @@ function UserName (){
       body: JSON.stringify(userData)
     })
 
-    swal("Thank You for Submitting!", "Welcome to Locally📍",  "success")
+    await swal("Thank You for Submitting!", "Welcome to Locally📍",  "success")
     setSubmitted(true);
   };
 
@@ -46,12 +62,12 @@ function UserName (){
 
   
   return (
-    <div className={"username-form"}>
+    <div className="username-form" >
       <h2>What should folks call you?</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="User name - people see this"
+          placeholder="Username"
           name="userName"
           value={userData.userName}
           onChange={handleInputChange}
@@ -59,7 +75,7 @@ function UserName (){
         />
         <input
           type="text"
-          placeholder="First name - not shared"
+          placeholder="First Name"
           name="firstName"
           value={userData.firstName}
           onChange={handleInputChange}
@@ -67,7 +83,7 @@ function UserName (){
         />
         <input
           type="text"
-          placeholder="Last name - not shared"
+          placeholder="Last Name"
           name="lastName"
           value={userData.lastName}
           onChange={handleInputChange}
@@ -76,11 +92,13 @@ function UserName (){
         <input
           type="number"
           placeholder="18" //this doesn't actually work for some reason, i can't override the age box React put in
+          id="typeNumber"
           name="age"
           value={userData.age}
           onChange={handleInputChange}
           required
         />
+
         <button type="submit">Submit</button>
       </form>
     </div>

@@ -1,41 +1,85 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import io from 'socket.io-client'
-function Chat() {
+import {io, Socket} from 'socket.io-client'
+import UserName from './userName';
 
-  const socket = io('http://localhost:3000')
+function formatTimestamp(timestamp: string){
+  const date = new Date(timestamp);
+
+  const options ={
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  };
+  return date.toLocaleString('en-US', options).replace(',', ' @');
+}
+
+function Chat() {
+  const [comment, setComment] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const socketRef = useRef<Socket|null>(null);
   const [docs, setDocs] = useState([]);
 
 
+  const handleCommentSubmit: React.MouseEventHandler<HTMLButtonElement> = async (event) => {
+    event.preventDefault();
+    const result = await axios.get(`http://localhost:3000/api/getUser/${socketRef.current?.id}`)
+    console.log(result);
+    const username_ = result.data.username;
+    setUsername(username_)
+    event.preventDefault();
+    try{
+      const response = await axios.post('http://localhost:3000/api/postComment',{
+        username:await  username_,
+        text: comment
+      })
+    }catch(error){
+      console.error(error)
+    }
+  }
+
+  const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> = (event) =>{
+    setComment(event.target.value)
+  }
 
   useEffect(()=> {
     const fetchData = async () =>{
       try{
-        const response = await axios.get("http://localhost:3000/api/getPosts");
-        console.log(response.data)
+        const response = await axios.get(`http://localhost:3000/api/getPosts`);
         if(Array.isArray(response.data))
-          {setDocs(response.data)}
+          {
+            setDocs(response.data)
+          }
       }catch(error){
         console.log(error)
       }
     }
     fetchData();
 
-    socket.on('connect', ()=>{
-      console.log("SOCKET CONNECTED: ", socket.id)
+    socketRef.current =io('http://localhost:3000')
+
+    socketRef.current.on('connect', ()=>{
+      console.log("SOCKET CONNECTED: ", socketRef.current?.id);
     })
 
-    socket.on('Comment', (item)=>{
+    socketRef.current.on('Comment', (item)=>{
       console.log("NEW COMMENT RECIEVED:", item);
       setDocs((prevDocs) => Array.isArray(prevDocs) ? [...prevDocs, item] : [item]);
     })
 
 
     return() =>{
-      socket.off('Comment')
+      if(socketRef.current){
+        socketRef.current.off('Comment')
+        socketRef.current.disconnect;
+      }
     }
 
   }, [])
+
 
   return (
     <div className='w-[25vw] h-full block bg-blue-100'>
@@ -45,21 +89,18 @@ function Chat() {
           <ul>
             {docs.map((doc) =>(
               <li key={doc._id} className='text-white'>
-                <strong>ID: </strong>{doc.id}<br/>
-                <strong>comment </strong>{doc.comment}<br/>
+                <strong>{doc.username}: </strong>{doc.text}
+                <p>{formatTimestamp(doc.timestamp)}</p>
               </li>
             ))}
-
-
-
           </ul>
 
 
           </div>
         <div className='flex items-end'>
           <div className='w-full p-2 flex'>
-            <textarea className='form-control overflow-hidden resize-none' placeholder='Enter Thoughts Here!' rows={3}></textarea>
-            <button type='button' className='btn btn-primary bg-bubble-gum'>Send</button>
+            <textarea className='form-control overflow-hidden resize-none' placeholder='Enter Thoughts Here!' rows={3} value={comment} onChange={handleChange}></textarea>
+            <button type='button' className='btn btn-primary bg-bubble-gum' onClick={handleCommentSubmit}>Send</button>
           </div>
         </div>
       </div>
