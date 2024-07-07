@@ -22,15 +22,23 @@ function UserName (){
   })
 
   const [submitted, setSubmitted] = useState<Boolean>(false);
-
-
+  const [headerText, setHeaderText] = useState<string>("What should folks call you?")
   useEffect(()=>{
     socket.on('connect', ()=>{
       console.log("Socket connected in username: ", socket.id);
        setUserData(prevState =>({...prevState, socketID: socket.id}));
     });
 
-    return ()=>{socket.off('connect')}
+    const handleBeforeUnload = () =>{
+      socket.disconnect();
+    } 
+
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+
+    return ()=>{
+      socket.off('connect')
+    
+    }
   })
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,16 +49,23 @@ function UserName (){
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); //need this here. If not, the whole form just reloads like it is a fresh page
     console.log(userData)
-    await fetch('http://localhost:3000/api/postData', {
+    const response = await fetch('http://localhost:3000/api/postData', {
       method: 'POST',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify(userData)
     })
 
-    await swal("Thank You for Submitting!", "Welcome to Locally📍",  "success")
-    localStorage.setItem('username', userData.userName); //DZ testing 7.7.24
-    setSubmitted(true);
-    window.location.reload(); // DZ testing 7.7.24
+    if(!response.ok){
+      setHeaderText("User is already taken try again.")
+      console.log("USER TAKEN");
+    }
+
+      else{
+      await swal("Thank You for Submitting!", "Welcome to Locally📍",  "success")
+      localStorage.setItem('username', userData.userName); //DZ testing 7.7.24
+      setSubmitted(true);
+      window.location.reload(); // DZ testing 7.7.24
+      }
   };
 
 
@@ -65,7 +80,7 @@ function UserName (){
   
   return (
     <div className="username-form" >
-      <h2>What should folks call you?</h2>
+      <h2>{headerText}</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"

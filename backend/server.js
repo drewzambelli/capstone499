@@ -48,8 +48,7 @@ const Message = mongoose.model('Message', MessageSchema);
 
 async function getDatabase() {
     const uri = `mongodb+srv://${username}:${password}@locally-cluster-1.crkbqzb.mongodb.net/?retryWrites=true&w=majority&appName=locally-cluster-1`;
-    // console.log(uri);
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(uri);
     let conn;
     try {
         conn = await client.connect();
@@ -81,7 +80,7 @@ app.get('/api/getUser/:id', async(req,res) =>{
         const result = await usernames.findOne({socketId: sID })
         res.send(result);
     }catch(error){
-        console.log(error);
+        console.error(error);
     }
 })
 
@@ -107,18 +106,25 @@ app.post('/api/postData', async (req, res) => {
         const db = database.collection('locally-usernames');
         const body = req.body;
         if (body) {
-            console.log(body);
-            const inputData = {
-                id: await db.countDocuments() + 1,
-                username: body.userName,
-                firstname: body.firstName,
-                lastname: body.lastName,
-                socketId : body.socketID,
-                age: parseInt(body.age)
-            };
+            const userCheck = await db.findOne({username: body.userName});
+            console.log(`USER CHECK: ${userCheck}`)
+            if(userCheck){
+                console.log("USER IS THERE ALREADY")
+                res.status(404).send("User is taken");
+            }
+            else{
+                const inputData = {
+                    id: await db.countDocuments() + 1,
+                    username: body.userName,
+                    firstname: body.firstName,
+                    lastname: body.lastName,
+                    socketId : body.socketID,
+                    age: parseInt(body.age)
+                };
             const result = await db.insertOne(inputData);
             res.status(200).send(`Data inserted with ID ${result.insertedId}`);
             console.log(`Data inserted with ID ${result.insertedId}`);
+            }
         }
     } catch (error) {
         console.error(error);
@@ -148,7 +154,6 @@ app.get('/api/checkUserExists/:username', async (req, res) => {
 //END CHECK EXISTENCE OF USER ID ALREADY CREATED - 7.7.24
 
 io.on('connection', (socket) => {
-    disconnectAllUsers();
     console.log('A user connected:', socket.id);
     connectedUsers [socket.id] = socket;
     if(Object.keys(connectedUsers).length > 100){
