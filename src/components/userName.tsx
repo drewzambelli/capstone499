@@ -17,7 +17,7 @@ function UserName (){
     userName: '',
     firstName: '',
     lastName: '',
-    age: 0,
+    age: 18,
     socketID: "",
   })
 
@@ -48,7 +48,9 @@ function UserName (){
     })
 
     await swal("Thank You for Submitting!", "Welcome to Locally📍",  "success")
+    localStorage.setItem('username', userData.userName); //DZ testing 7.7.24
     setSubmitted(true);
+    window.location.reload(); // DZ testing 7.7.24
   };
 
 

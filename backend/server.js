@@ -73,7 +73,6 @@ app.get('/api/getPosts', async (req, res) => {
     }
 });
 
-
 app.get('/api/getUser/:id', async(req,res) =>{
     try{
         const sID = req.params.id;
@@ -127,6 +126,7 @@ app.post('/api/postData', async (req, res) => {
     }
 });
 
+//START CHECK EXISTENCE OF USER ID ALREADY CREATED - 7.7.24
 app.get('/api/checkUserExists/:username', async (req, res) => {
     try {
         const database = await getDatabase();
@@ -145,6 +145,7 @@ app.get('/api/checkUserExists/:username', async (req, res) => {
         res.status(500).send('Error checking user');
     }
 });
+//END CHECK EXISTENCE OF USER ID ALREADY CREATED - 7.7.24
 
 io.on('connection', (socket) => {
     disconnectAllUsers();
