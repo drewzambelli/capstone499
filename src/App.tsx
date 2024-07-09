@@ -20,10 +20,12 @@ function App() {
   //   setUserExists(true); // User now exists - need to write routine to handle if user already exists.
   // };
   const [userExists, setUserExists] = useState(false);
+  const [storedUsernames, setStoredUsername] = useState<string | null>('');
 
   // START CHECK IF USER ALREADY EXISTS
   const checkUserExists = async () => {
     const storedUsername = localStorage.getItem('username');
+    setStoredUsername(storedUsername);
     if (storedUsername) {
       try {
         const response = await fetch(`http://localhost:3000/api/checkUserExists/${storedUsername}`);
@@ -59,7 +61,7 @@ function App() {
         <>
           <GoogleMap /> 
           {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
-          <Chat />
+          <Chat  usernameStored={storedUsernames}/>
         </>
       )}
     </div>

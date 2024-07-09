@@ -15,13 +15,18 @@ function formatTimestamp(timestamp: string) {
   return date.toLocaleString('en-US', options).replace(',', ' @');
 }
 
-function Chat() {
+interface ChatProps{
+  usernameStored : string | null;
+}
+
+const Chat: React.FC<ChatProps> = ({ usernameStored }) =>{
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState([]);
   const socketRef = useRef<Socket | null>(null);
   const [isChatVisible, setIsChatVisible] = useState(true);
 
   useEffect(() => {
+    console.log("USER:",usernameStored)
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/getPosts');
@@ -54,8 +59,9 @@ function Chat() {
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log("POST USER: ", usernameStored);
       await axios.post('http://localhost:3000/api/postComment', {
-        username: "Anonymous",
+        username: {usernameStored},
         text: comment
       });
     } catch (error) {
@@ -88,9 +94,9 @@ function Chat() {
             ))}
           </ul>
           <div className='input-container'>
-            <textarea className='input-field' placeholder='Enter Thoughts Here!' rows={3} value={comment} onChange={handleChange}></textarea>
+            <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' rows={3} value={comment} onChange={handleChange}></textarea>
             <button type='button' className='send-button' onClick={handleCommentSubmit}>
-              <i class="bi bi-arrow-up"></i>
+              <i className="bi bi-arrow-up"></i>
             </button>
           </div>
         </div>
