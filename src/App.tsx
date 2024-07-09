@@ -55,7 +55,8 @@ function App() {
       {!userExists && <UserName />}
       {userExists && (
         <>
-          <GoogleMap /> {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
+          <GoogleMap /> 
+          {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
           <Chat />
         </>
       )}
