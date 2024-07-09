@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react' //DZ testing, added useEffect
 import firebase from 'firebase/app'
 import './App.css'
 import UserName from './components/userName';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 
 export type AutocompleteMode = {id: string; label: string};

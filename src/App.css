@@ -126,3 +126,108 @@
 .username-form button[type="submit"]:hover {
   background-color: #e64980; /* Lighter pink on hover */
 }
+
+.chat-container {
+  position: fixed;
+  left: 20px; /* Initially visible */
+  top: 150px;
+  width: 400px;
+  height: 75%;
+  padding: 10px 15px;
+  overflow-y: auto;
+  background-color: black;
+  border-radius: 40px;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+/* Hide the chat container by moving it left out of the viewport */
+.chat-container.hidden {
+  opacity: 0; /* Fully transparent */
+  visibility: hidden; /* Remove from flow after animation */
+}
+
+.chat-container .chat-header{
+  display: flex;
+  height: 70px;
+  justify-content: center;
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+
+.chat-header .header-text{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  font-size: 35px;
+  font-family: "Modak";
+  background-color: white;
+  width: 350px;
+  border-radius: 40px;
+  padding: 5px 15px 0px 15px;
+}
+
+.chat-header .hide-chat-button{
+  padding-top: 5px;
+  transition: color 200ms ease-in-out;
+}
+
+.chat-header .hide-chat-button:hover{
+  color: #ff7798 ;
+}
+
+.show-chat-button {
+  position: fixed; /* Ensure it's always accessible */
+  left: 20px; /* Consistent with the chat position */
+  bottom: 20px; /* Positioned at the bottom of the viewport */
+  background: none;
+  border-radius: 80px;
+  color: white; /* Adjust based on your theme */
+  cursor: pointer;
+  font-size: 24px; /* Large enough for easy interaction */
+  padding: 10px 15px;
+  transition: color 200ms ease-in-out;
+  background-color: black;
+}
+
+.show-chat-button:hover {
+  color: #ff7798; /* Visual feedback on hover */
+}
+
+.chat-container .chat-box{
+  background-color: #ff7798;
+  color: black;
+  border-radius: 20px;
+  padding: 10px 10px;
+  margin-bottom: 10px;
+  height: 475px;
+}
+
+.input-container{
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+ flex-direction: row;
+}
+
+.input-container .input-field{
+  width: 315px;
+  min-height: 150px;
+  max-height: 150px;
+  border-radius: 20px;
+  padding: 10px 10px;
+}
+
+.input-container .send-button{
+  background-color: white;
+  border-radius: 80px;
+  height: 40px;
+  width: 40px;
+  transition: background-color 200ms ease-in-out;
+}
+
+.input-container .send-button:hover{
+  background-color: #ff7798;
+}
+
+
