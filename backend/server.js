@@ -89,9 +89,9 @@ app.post('/api/postComment', async (req, res) => {
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
         const {username, text} = req.body;
-        console.log(username.usernameStored,text);
-        const newMessage = new Message({username: username.usernameStored, text, timestamp: new Date()})
-        console.log(newMessage);
+        console.log(username, text);  //SA(77.10.24) Corrected log statement
+        const newMessage = new Message({username, text, timestamp: new Date()})
+        console.log(newMessage);  // SA(77.10.24)This will now log the message correctly
         const result = await commentsCollection.insertOne(newMessage);
         io.emit('Comment', newMessage);
         res.status(200).send(newMessage);

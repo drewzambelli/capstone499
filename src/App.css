@@ -132,25 +132,40 @@
   left: 20px; /* Initially visible */
   top: 150px;
   width: 400px;
-  height: 740px;
-  padding: 10px 15px;
+  padding: 15px 15px;
   overflow-y: auto;
   background-color: black;
   border-radius: 40px;
-  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-/* Hide the chat container by moving it left out of the viewport */
+/* Media query for screens smaller than 600px */
+@media (max-width: 1380px) {
+  .chat-container {
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for the width of the container */
+    top: 150px; /* Override the top position */
+  }
+}
+
+
 .chat-container.hidden {
   opacity: 0; /* Fully transparent */
+  transform: translateY(-100%); /* Move it up out of view */
   visibility: hidden; /* Remove from flow after animation */
+}
+
+.chat-container.visible {
+  opacity: 1; /* Fully visible */
+  visibility: visible; /* Make visible */
 }
 
 .chat-container .chat-header{
   display: flex;
   height: 70px;
   justify-content: center;
-  margin-top: 10px;
   padding-bottom: 10px;
 }
 
@@ -177,41 +192,101 @@
 }
 
 .show-chat-button {
-  position: fixed; /* Ensure it's always accessible */
-  left: 20px; /* Consistent with the chat position */
-  bottom: 20px; /* Positioned at the bottom of the viewport */
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
   background: none;
   border-radius: 80px;
-  color: white; /* Adjust based on your theme */
+  color: white;
   cursor: pointer;
-  font-size: 24px; /* Large enough for easy interaction */
+  font-size: 24px;
   padding: 10px 15px;
-  transition: color 200ms ease-in-out;
+  transition: color .2s ease-in-out; /* Add transition for smooth effect */
   background-color: black;
 }
+
+
 
 .show-chat-button:hover {
   color: #ff7798; /* Visual feedback on hover */
 }
 
 .chat-container .chat-box{
-  background-color: #ff7798;
+ 
+  color: black; 
+  border-radius: 20px; 
+  padding: 10px; 
+  margin-bottom: 10px; 
+  height: 475px; 
+  overflow-y: auto; 
+  scrollbar-width: thin; 
+  scrollbar-color: #ff7798 #2c2c2c; 
+}
+
+.chat-box .user-name{
+  font-size: 15px;
+  text-decoration: underline;
+}
+
+.chat-box .chat-content{
+  font-size: 20px;
+}
+
+
+.chat-box .time-stamp{
+  font-size: 10px;
+}
+
+
+.chat-box li {
+  background-color: #2c2c2c; 
+  color: white; 
+  border-radius: 20px; 
+  padding: 5px 15px; 
+  margin: 8px 0; 
+  max-width: calc(100% - 40px); 
+  word-wrap: break-word; /* Prevents long words from overflowing */
+  box-sizing: border-box; /* Includes padding in width calculation */
+}
+
+/* Aligning user messages to the right */
+.chat-box .user-message {
+  margin-left: auto; /* Pushes the bubble to the right */
+  background-color: #ff7798; /* Different background for user messages */
   color: black;
-  border-radius: 20px;
-  padding: 10px 10px;
-  margin-bottom: 10px;
-  height: 475px;
+  
+}
+
+/* Styling the scrollbar itself */
+.chat-box::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+  background-color: #2c2c2c; /* Scrollbar background color */
+  
+}
+
+/* Styling the draggable part of the scrollbar */
+.chat-box::-webkit-scrollbar-thumb {
+  background-color: #ff7798; /* Color of the thumb */
+  
+}
+
+/* Optional: Style the track (part of the scrollbar not covered by the thumb) */
+.chat-box::-webkit-scrollbar-track {
+  background: #404040; /* Track color */
+  
 }
 
 .input-container{
  display: flex;
- justify-content: space-around;
+ justify-content: space-between;
  align-items: center;
  flex-direction: row;
+ padding: 0px 10px;
+ 
 }
 
 .input-container .input-field{
-  width: 315px;
+  width: 300px;
   min-height: 150px;
   max-height: 150px;
   border-radius: 20px;
