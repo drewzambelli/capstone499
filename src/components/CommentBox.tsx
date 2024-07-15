@@ -1,4 +1,5 @@
 import React from 'react';
+import UserName from './userName';
 
 interface CommentBoxProps {
   lat: number;
@@ -7,19 +8,29 @@ interface CommentBoxProps {
 
 const CommentBox: React.FC<CommentBoxProps> = ({ lat, lng }) => {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        transform: 'translate(-50%, -100%)',
-        // top: `${lat}px`,
-        // left: `${lng}px`,
-        backgroundColor: 'pink',
-        padding: '10px',
-        borderRadius: '5px',
-      }}
-    >
+    <div className = "comment-class">
+      <h2>"Leave a Comment"</h2>
+      <form /*{onSubmit = {handleSubmit}}*/>
+      <input
+        type = "text"
+        
+      />
+      <input
+        type = "text"
+        
+      />
+      <input
+        type = "text"
+        
+      />
+      <input
+        type = "text"
+        
+      />
       <p>Latitude: {lat}</p>
       <p>Longitude: {lng}</p>
+      <button type = "Submit">Submit Comment</button>
+      </form>
     </div>
   );
 };
