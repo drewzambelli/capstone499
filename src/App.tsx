@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react' //DZ testing, added useEffect
 import firebase from 'firebase/app'
 import './App.css'
 import UserName from './components/userName';
+import CommentBox from './components/CommentBox';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
@@ -21,6 +22,8 @@ function App() {
   // };
   const [userExists, setUserExists] = useState(false);
   const [storedUsernames, setStoredUsername] = useState<string | null>('');
+  const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); //comment box lat/long
+
 
   // START CHECK IF USER ALREADY EXISTS
   const checkUserExists = async () => {
@@ -51,6 +54,10 @@ function App() {
     console.log(place); // Just logging for now, adjust as needed
   };
 
+  const handleMapDoubleClick = (lat: number, lng: number) => { // <-- ADD THIS
+    console.log('in app.tsx function')
+    setCommentPosition({ lat, lng });
+  };
 
   return (
 
@@ -59,9 +66,10 @@ function App() {
       {!userExists && <UserName />}
       {userExists && (
         <>
-          <GoogleMap /> 
+          <GoogleMap onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
           {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
           <Chat  usernameStored={storedUsernames}/>
+          {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} />} {/* commentBox.tsx */}
         </>
       )}
     </div>
