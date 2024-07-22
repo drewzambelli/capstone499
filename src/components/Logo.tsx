@@ -5,7 +5,8 @@ function Logo() {
     <a href='/'>  
       <img 
           src={IMAGES.logo}
-          style={{ width:'200px', paddingTop: '7px'}} // Example dimensions
+          className='logo'
+          style={{ width:'200px', minWidth:'200px', paddingTop: '7px'}} // Example dimensions
           alt="Logo"
       />
     </a>

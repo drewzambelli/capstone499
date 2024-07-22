@@ -109,8 +109,8 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, location}) => {
           <div className='header-text'>
             Chat Locally
             <button className="hide-chat-button" onClick={handleHideChat}>
-  <i className="bi bi-x-circle"></i>
-</button>
+              <i className="bi bi-x-circle"></i>
+            </button>
           </div>
         </div>
         <div>

@@ -26,21 +26,35 @@
 
 .site-header{
   width: 50%;
-  min-width: 700px;
+  height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 50px 0px;
+  padding: 0px 40px 0px;
   margin-top: 15px;
   z-index: 1000; /* Ensure the header is above the map */
-  background: black; /* Semi-transparent or other styling */
-  border-radius: 800px
+  background: black; 
+  border-radius: 800px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
+}
+
+/* Media query for when the header becomes too narrow */
+@media (max-width: 1230px) {
+  .site-header .search-bar{
+    width: 380px;
+  }
+  .site-header .logo {
+    display: none; /* Hide the logo */
+  }
+  .site-header {
+    justify-content: center; /* Center everything in the header */
+    width: 400px;
+  }
 }
 
 .center-element{
   display: flex;
   justify-content: center;
-  
 }
 
 .map-class{
@@ -133,10 +147,27 @@
   left: 50%; 
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: rgba(255, 192, 203, 0.836);
+  background-color: rgba(255, 192, 203, 1);
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  z-index: 1100; /*put box on top of map */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+  
+}
+
+
+
+.comment-class .hide-comment-button{
+  color: white;
+  background-color: #2c2c2c;
+  margin-top: 10px;
+  padding: 5px 40px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease ;
+}
+
+.comment-class .hide-comment-button:hover {
+  background-color: white;
+  color:black;
 }
 
 .comment-class h2 {
@@ -173,19 +204,23 @@
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
   background-color: #ff69b4; /* Pink color */
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease ;
 }
 
 .comment-class button[type="submit"]:hover {
-  background-color: #e64980; /* Lighter pink on hover */
+  background-color: white; /* Lighter pink on hover */
+  color:black;
 }
 
 .chat-container {
   position: fixed;
-  left: 20px; /* Initially visible */
+  left: 50px; /* Initially visible */
   top: 150px;
   width: 400px;
   padding: 15px 15px;
@@ -195,10 +230,11 @@
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
 }
 
 /* Media query for screens smaller than 600px */
-@media (max-width: 1380px) {
+@media (max-width: 1230px) {
   .chat-container {
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Adjust for the width of the container */
