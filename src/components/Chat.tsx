@@ -17,14 +17,18 @@ function formatTimestamp(timestamp: string) {
 
 interface ChatProps{
   usernameStored : string | null;
+  lng?: number | undefined;
+  lat?: number | undefined; 
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored }) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, lng,lat}) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState([]);
   const socketRef = useRef<Socket | null>(null);
   const endOfMessagesRef = useRef<HTMLLIElement | null>(null);
   const [isChatVisible, setIsChatVisible] = useState(true);
+
+
 
   useEffect(() => {
     console.log("USER:", usernameStored);
@@ -63,8 +67,9 @@ const Chat: React.FC<ChatProps> = ({ usernameStored }) => {
     try {
       console.log("POST USER: ", usernameStored);
       await axios.post('http://localhost:3000/api/postComment', {
+        location: {lng, lat},
         username: usernameStored,
-        text: comment
+        text: comment,
       });
       setComment(''); // Clears input box after sending
     } catch (error) {
@@ -99,6 +104,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored }) => {
     }, 10); // Small delay to ensure the class change has taken effect
   };
 
+  console.log(location)
 
   return (
     <div >
@@ -128,8 +134,12 @@ const Chat: React.FC<ChatProps> = ({ usernameStored }) => {
             ))}
             <div ref={endOfMessagesRef}></div>
           </ul>
+          <div className='flex text-center'>
+            <label className='text-white'>Lng: {lng}</label>
+            <label className='text-white'>Lat: {lat}</label>
+          </div>
           <div className='input-container'>
-            <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' rows={3} value={comment} onChange={handleChange}></textarea>
+            <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' value={comment} onChange={handleChange}></textarea>
             <button type='button' className='send-button' onClick={async (event) => { await handleCommentSubmit(event);scrollToBottom();}}>
               <i className="bi bi-arrow-up"></i>
             </button>

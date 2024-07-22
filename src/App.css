@@ -379,7 +379,7 @@
 
 .input-container .input-field{
   width: 300px;
-  min-height: 150px;
+  min-height: 10px;
   max-height: 150px;
   border-radius: 20px;
   padding: 10px 10px;

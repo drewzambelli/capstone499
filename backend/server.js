@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const axios = require('axios');
+
 
 const app = express();
 const server = require('http').createServer(app);
@@ -17,10 +19,13 @@ const port = 3000;
 
 const user = process.env.MONGO_USERNAME;
 const pass = process.env.MONGO_PASSWORD;
+const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 const username = encodeURIComponent(user);
 const password = encodeURIComponent(pass);
 
+
+const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=${GOOGLE_API_KEY}`;
 // server.use(cors())
 
 app.use(cors());
@@ -38,6 +43,7 @@ const DataSchema = new mongoose.Schema({
 });
 
 const MessageSchema = new mongoose.Schema({
+    location: {lat: Number, lng: Number},
     username: String,
     text: String,
     timestamp: {type: Date, default:Date.now},
@@ -72,6 +78,25 @@ app.get('/api/getPosts', async (req, res) => {
     }
 });
 
+
+app.get('/api/getLocationAddress', async (req,res)=>{
+
+    try{
+        console.log(req.body);
+        const location = req.body;
+        const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.location.lat},${location.location.lng}=${GOOGLE_API_KEY}`;
+        console.log(GOOGLE_URL);
+        const result = await axios.get(GOOGLE_URL);
+        res.status(200).send(result.data);
+
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).send("ERROR")
+    }
+
+})
+
 app.get('/api/getUser/:id', async(req,res) =>{
     try{
         const sID = req.params.id;
@@ -88,11 +113,11 @@ app.post('/api/postComment', async (req, res) => {
     try {
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
-        const {username, text} = req.body;
+        const {username, text, location} = req.body;
         console.log(username, text);  //SA(77.10.24) Corrected log statement
-        const newMessage = new Message({username, text, timestamp: new Date()})
+        const newMessage = new Message({username, location, text, timestamp: new Date()})
         console.log(newMessage);  // SA(77.10.24)This will now log the message correctly
-        const result = await commentsCollection.insertOne(newMessage);
+        // const result = await commentsCollection.insertOne(newMessage);
         io.emit('Comment', newMessage);
         res.status(200).send(newMessage);
     } catch (error) {

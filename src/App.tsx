@@ -64,6 +64,7 @@ function App() {
     setCommentPosition(null);
   };
 
+
   return (
 
     <div  style={{ height: '100vh' }}>
@@ -73,8 +74,8 @@ function App() {
         <>
           <GoogleMap onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
           {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
-          <Chat  usernameStored={storedUsernames}/>
-          {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} onClose={handleCloseCommentBox} />} {/* commentBox.tsx */}
+          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} usernameStored={storedUsernames}/>}
+          {/* {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} onClose={handleCloseCommentBox} />} commentBox.tsx */}
         </>
       )}
     </div>
