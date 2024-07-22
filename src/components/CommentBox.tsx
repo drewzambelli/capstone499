@@ -1,5 +1,4 @@
 import React from 'react';
-import UserName from './userName';
 
 interface CommentBoxProps {
   lat: number;

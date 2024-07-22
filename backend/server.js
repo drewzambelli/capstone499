@@ -38,6 +38,7 @@ const DataSchema = new mongoose.Schema({
 });
 
 const MessageSchema = new mongoose.Schema({
+    location: {lat: Number, lng: Number},
     username: String,
     text: String,
     timestamp: {type: Date, default:Date.now},
@@ -90,9 +91,9 @@ app.post('/api/postComment', async (req, res) => {
         const commentsCollection = database.collection('comments');
         const {username, text} = req.body;
         console.log(username, text);  //SA(77.10.24) Corrected log statement
-        const newMessage = new Message({username, text, timestamp: new Date()})
+        const newMessage = new Message({username, location, text, timestamp: new Date()})
         console.log(newMessage);  // SA(77.10.24)This will now log the message correctly
-        const result = await commentsCollection.insertOne(newMessage);
+        // const result = await commentsCollection.insertOne(newMessage);
         io.emit('Comment', newMessage);
         res.status(200).send(newMessage);
     } catch (error) {

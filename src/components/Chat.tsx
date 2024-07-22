@@ -17,9 +17,10 @@ function formatTimestamp(timestamp: string) {
 
 interface ChatProps{
   usernameStored : string | null;
+  location : {lat: number, lng:number}
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored }) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, location}) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState([]);
   const socketRef = useRef<Socket | null>(null);
@@ -63,6 +64,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored }) => {
     try {
       console.log("POST USER: ", usernameStored);
       await axios.post('http://localhost:3000/api/postComment', {
+        location: location,
         username: usernameStored,
         text: comment
       });
