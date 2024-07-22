@@ -40,6 +40,8 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODI
       console.log('Coordinates:', lat, lng); // testing
       onDoubleClick(lat, lng);
       setCommentPosition({ lat, lng });
+
+
     } else {
       console.log('No latLng found in event', event); // testing
     }

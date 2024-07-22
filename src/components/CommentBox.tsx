@@ -9,22 +9,16 @@ interface CommentBoxProps {
 const CommentBox: React.FC<CommentBoxProps> = ({ lat, lng }) => {
   return (
     <div className = "comment-class">
-      <h2>"Leave a Comment"</h2>
+      <h2>"Comment Title Here"</h2>
       <form /*{onSubmit = {handleSubmit}}*/>
       <input
         type = "text"
+        placeholder='Title'
         
       />
-      <input
-        type = "text"
-        
-      />
-      <input
-        type = "text"
-        
-      />
-      <input
-        type = "text"
+      <textarea
+        className='w-[10vw]'
+        placeholder='Enter your Comment!'
         
       />
       <p>Latitude: {lat}</p>
