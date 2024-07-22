@@ -9,6 +9,7 @@ import './App.css'
 import UserName from './components/userName';
 import CommentBox from './components/CommentBox';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import axios from "axios"
 
 
 
@@ -23,6 +24,7 @@ function App() {
   const [userExists, setUserExists] = useState(false);
   const [storedUsernames, setStoredUsername] = useState<string | null>('');
   const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); //comment box lat/long
+  const [address, setAddress] = useState<string>('');
 
 
   // START CHECK IF USER ALREADY EXISTS
@@ -54,9 +56,11 @@ function App() {
     console.log(place); // Just logging for now, adjust as needed
   };
 
-  const handleMapDoubleClick = (lat: number, lng: number) => { // <-- ADD THIS
+  const handleMapDoubleClick = async (lat: number, lng: number) => { // <-- ADD THIS
     console.log('in app.tsx function')
     setCommentPosition({ lat, lng });
+    let result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
+    setAddress(result.data.address);
   
   };
 
@@ -74,7 +78,7 @@ function App() {
         <>
           <GoogleMap onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
           {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
-          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} usernameStored={storedUsernames}/>}
+          {commentPosition && <Chat address={address} usernameStored={storedUsernames}/>}
           {/* {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} onClose={handleCloseCommentBox} />} commentBox.tsx */}
         </>
       )}

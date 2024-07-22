@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
-import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
+import { APIProvider, InfoWindow, Map, Marker } from '@vis.gl/react-google-maps';
 import env from '../env/env';
 import Header from './Header'; // Make sure this path is correct
 import MapHandler from './auto-components/MapHandler';
 import IMAGES from './img/images';
+import axios from 'axios';
 
 interface GoogleMapProps {
-  onDoubleClick: (lat: number, lng: number) => void; // <-- ADD THIS
+  onDoubleClick: (lat: number, lng: number) => void; 
+
 }
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODIFY THIS
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [userLocation, setUserLocation] = useState({ lat: 40.730610, lng: -73.935242 });
   const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); // <-- State for the CommentBox position
-
+  const [markers, setMarkers] = useState<Array<{lat: number; lng: number}>>([]);
+  const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
+  const [address, setAddress] = useState<string>('');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -41,10 +45,23 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODI
       onDoubleClick(lat, lng);
       setCommentPosition({ lat, lng });
 
+      setMarkers((prevMarkers) => [...prevMarkers, {lat,lng}]);
+
 
     } else {
       console.log('No latLng found in event', event); // testing
     }
+  };
+
+
+  const handleMouseOverMarker = async (marker : {lat: number; lng: number}) =>{
+    setHoveredMarker(marker);
+    const address = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${marker.lng}/lat=${marker.lat}`);
+    setAddress(address.data.address);
+  }
+  const handleMouseOut = () => {
+    setHoveredMarker(null);
+    setAddress('');
   };
 
   return (
@@ -60,14 +77,29 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODI
           options={{ disableDoubleClickZoom: true }}
           onDblclick = {handleDoubleClick} 
         >
-          <Marker 
+          {/* <Marker 
             position={userLocation}
             icon={IMAGES.icon}
-          />
-          <Marker
-           position ={commentPosition}
-           icon={IMAGES.icon}
-           />
+          /> */}
+          {hoveredMarker && (
+            <InfoWindow
+            options={{ pixelOffset: new google.maps.Size(0, -30) }}
+            onCloseClick={handleMouseOut}
+            position={{lat: hoveredMarker.lat, lng: hoveredMarker.lng}}
+            >
+              <div className='p-2 text-sm leading-tight'>{address}</div>
+              </InfoWindow>
+          )}
+          {markers.map((marker, index) =>(
+            <Marker
+            key={index}
+            position ={{lat: marker.lat, lng: marker.lng}}
+            icon={IMAGES.icon}
+            onMouseOver={() => handleMouseOverMarker(marker)}
+            />
+          ))}
+
+
         </Map>
         <MapHandler place={selectedPlace} />
       </APIProvider>

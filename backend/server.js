@@ -79,16 +79,15 @@ app.get('/api/getPosts', async (req, res) => {
 });
 
 
-app.get('/api/getLocationAddress', async (req,res)=>{
+app.get('/api/getLocationAddress/lng=:lng_/lat=:lat_', async (req,res)=>{
 
     try{
-        console.log(req.body);
-        const location = req.body;
-        const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.location.lat},${location.location.lng}=${GOOGLE_API_KEY}`;
+        const location = req.params;
+        console.log(location);
+        const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat_},${location.lng_}&key=${GOOGLE_API_KEY}`;
         console.log(GOOGLE_URL);
         const result = await axios.get(GOOGLE_URL);
-        res.status(200).send(result.data);
-
+        res.status(200).send({address: result.data.results[0].formatted_address});
     }
     catch(error){
         console.error(error);

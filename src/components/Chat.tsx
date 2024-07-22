@@ -17,17 +17,15 @@ function formatTimestamp(timestamp: string) {
 
 interface ChatProps{
   usernameStored : string | null;
-  lng?: number | undefined;
-  lat?: number | undefined; 
+  address? :string;
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored, lng,lat}) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, address}) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState([]);
   const socketRef = useRef<Socket | null>(null);
   const endOfMessagesRef = useRef<HTMLLIElement | null>(null);
   const [isChatVisible, setIsChatVisible] = useState(true);
-
 
 
   useEffect(() => {
@@ -72,6 +70,9 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, lng,lat}) => {
         text: comment,
       });
       setComment(''); // Clears input box after sending
+
+
+
     } catch (error) {
       console.error(error);
     }
@@ -134,9 +135,9 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, lng,lat}) => {
             ))}
             <div ref={endOfMessagesRef}></div>
           </ul>
-          <div className='flex text-center'>
-            <label className='text-white'>Lng: {lng}</label>
-            <label className='text-white'>Lat: {lat}</label>
+          <div className='text-center block'>
+            <label className='text-white'>Add Comment To:</label>
+            <label className='text-white'>{address}</label>
           </div>
           <div className='input-container'>
             <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' value={comment} onChange={handleChange}></textarea>
