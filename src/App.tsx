@@ -57,6 +57,11 @@ function App() {
   const handleMapDoubleClick = (lat: number, lng: number) => { // <-- ADD THIS
     console.log('in app.tsx function')
     setCommentPosition({ lat, lng });
+  
+  };
+
+  const handleCloseCommentBox = () => {
+    setCommentPosition(null);
   };
 
   return (
@@ -69,7 +74,7 @@ function App() {
           <GoogleMap onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
           {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
           <Chat  usernameStored={storedUsernames}/>
-          {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} />} {/* commentBox.tsx */}
+          {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} onClose={handleCloseCommentBox} />} {/* commentBox.tsx */}
         </>
       )}
     </div>
