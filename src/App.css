@@ -221,20 +221,20 @@
 .chat-container {
   position: fixed;
   left: 50px; /* Initially visible */
-  top: 150px;
+  top: 50%;
   width: 400px;
   padding: 15px 15px;
   overflow-y: auto;
   background-color: black;
   border-radius: 40px;
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-50%);
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
   box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
 }
 
 /* Media query for screens smaller than 600px */
-@media (max-width: 1230px) {
+@media (max-width: 1540px) {
   .chat-container {
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Adjust for the width of the container */
@@ -379,7 +379,7 @@
 
 .input-container .input-field{
   width: 300px;
-  min-height: 10px;
+  min-height: 150px;
   max-height: 150px;
   border-radius: 20px;
   padding: 10px 10px;
