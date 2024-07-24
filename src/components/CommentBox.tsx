@@ -4,20 +4,20 @@ import { useState } from 'react';
 interface CommentBoxProps {
   onClose: () => void;
   address: string;
+  latLng: { lat: number; lng: number };
 }
 
 interface UserDataFirst {
   userName: string | null,
-  address: string,
+  address: { latLang: { lat: number, lng: number }, formatted_address: string },
   comments: string[],
   title: string
 }
 
-const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address }) => {
-
+const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => {
   const [userData, setUserData] = useState<UserDataFirst>({
     userName: localStorage.getItem('username'),
-    address: address,
+    address: { latLang: latLng, formatted_address: address },
     comments: [''],
     title: ''
   });
@@ -42,11 +42,11 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address }) => {
   const handleSubmitButton = async () => {
     const newComment = {
       userName: userData.userName,
-      address: address,
+      address: userData.address,
       text: userData.comments[0],
       timestamp: new Date()
     };
-
+    // console.log("NEW COMMENT", newComment);
     await axios.post('http://localhost:3000/api/postComment', newComment);
   };
 

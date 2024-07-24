@@ -3,7 +3,7 @@ import GoogleMap from "./components/GoogleMap"
 import Header from "./components/Header"
 import Chat from "./components/Chat"
 import OpenData from "./components/OpenData"
-import React, { useState, useEffect } from 'react' //DZ testing, added useEffect
+import React, { useState, useEffect } from 'react'
 import firebase from 'firebase/app'
 import './App.css'
 import UserName from './components/userName';
@@ -11,24 +11,17 @@ import CommentBox from './components/CommentBox';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import axios from "axios"
 
-
-
-export type AutocompleteMode = {id: string; label: string};
+export type AutocompleteMode = { id: string; label: string };
 
 function App() {
-  //Need to write code to check to see if user already exists, if so, we don't want create profile popping up
-  // const handleUserNameSubmit = (newUsername: any) => {
-  //   setUsername(newUsername); //we need to send this to the backend eventually
-  //   setUserExists(true); // User now exists - need to write routine to handle if user already exists.
-  // };
   const [userExists, setUserExists] = useState(false);
   const [storedUsernames, setStoredUsername] = useState<string | null>('');
-  const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); //comment box lat/long
+  const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
   const [selectedMarker, setSelectedMarker] = useState<{ lat: number; lng: number } | null>(null);
-  const [locationTaken, setLocationTaken] = useState<boolean> (false);
+  const [locationTaken, setLocationTaken] = useState<boolean>(false);
+  const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
 
-  // START CHECK IF USER ALREADY EXISTS
   const checkUserExists = async () => {
     const storedUsername = localStorage.getItem('username');
     setStoredUsername(storedUsername);
@@ -47,65 +40,58 @@ function App() {
     }
   };
 
-  const checkLocationExists =  async(lat: number, lng: number) =>{
-    const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`)
+  const checkLocationExists = async (lat: number, lng: number) => {
+    const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
     const address = result.data.address;
-    try{
+    try {
       let locationExist = await axios.get(`http://localhost:3000/api/checkComment/address=${address}`);
-      if(locationExist.data.address === null){
-        setLocationTaken(true)
+      if (locationExist.data.address === null) {
+        setLocationTaken(true);
       }
-    }catch(error){
-      console.error(error)
+    } catch (error) {
+      console.error(error);
     }
-      // console.log("address", address);
   }
-
 
   useEffect(() => {
     checkUserExists();
   }, []);
- //END CHECK IF USER ALREADY EXISTS
 
   const handlePlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     console.log(place); // Just logging for now, adjust as needed
   };
 
-  const handleMapDoubleClick = async (lat: number, lng: number) => { // <-- ADD THIS
-    console.log('in app.tsx function')
-    checkLocationExists(lat,lng);
+  const handleMapDoubleClick = async (lat: number, lng: number) => {
+    checkLocationExists(lat, lng);
     setCommentPosition({ lat, lng });
     let result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
-    setAddress(result.data.address);
-  
+    setAddress(result.data.formatted_address);
+    setLatLng({ lat, lng });
   };
 
-  const handleMarkerClick = (lat:number, lng:number)=>{
-    setSelectedMarker({lat,lng});
+  const handleMarkerClick = (lat: number, lng: number) => {
+    setSelectedMarker({ lat, lng });
   }
 
   const handleCloseCommentBox = () => {
     setLocationTaken(false);
   };
 
-
-
   return (
-
-    <div  style={{ height: '100vh' }}>
-      {/*<Header onPlaceSelect={handlePlaceSelect} />*/} {/*DZ 6.29.24: this line was messing up the Google Maps Auto Fill and Search - SEE GOOGLEMAPS.TSX LINE 30*/}
+    <div style={{ height: '100vh' }}>
       {!userExists && <UserName />}
       {userExists && (
         <>
-          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
-          {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
-          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames}/>}
-          {locationTaken && <CommentBox address={address} onClose={handleCloseCommentBox} />} commentBox.tsx
+          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
+          <Chat address={address} usernameStored={storedUsernames}/> 
+          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />}
+          {locationTaken && latLng && (
+            <CommentBox latLng={latLng} address={address} onClose={handleCloseCommentBox} />
+          )}
         </>
       )}
     </div>
   )
-
 }
 
 export default App

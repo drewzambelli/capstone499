@@ -18,8 +18,8 @@ function formatTimestamp(timestamp: string) {
 interface ChatProps {
   usernameStored: string | null;
   address?: string;
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
 }
 
 const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
@@ -32,7 +32,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/getPosts?lat=${lat}&lng=${lng}`);
+        const response = await axios.get(`http://localhost:3000/api/getPosts`);
         if (Array.isArray(response.data)) {
           setDocs(response.data);
         }
@@ -51,13 +51,13 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
       console.log('New comment received:', newComment);
       setDocs((prevDocs) => {
         const updatedDocs = [...prevDocs];
-        const existingDocIndex = updatedDocs.findIndex(doc => doc.address === newComment.address);
+        const existingDocIndex = updatedDocs.findIndex(doc => doc.address.formatted_address === newComment.address.formatted_address);
         if (existingDocIndex !== -1) {
           // Add new comment to the existing document
-          updatedDocs[existingDocIndex].comments.push(newComment);
+          updatedDocs[existingDocIndex].comments.push(newComment.comments[0]);
         } else {
           // If the document does not exist, add it to the docs array
-          updatedDocs.push({ address: newComment.address, comments: [newComment] });
+          updatedDocs.push(newComment);
         }
         return updatedDocs;
       });
@@ -76,7 +76,10 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
     event.preventDefault();
     try {
       const newComment = {
-        address: address,
+        address: {
+          latLang: { lat, lng },
+          formatted_address: address
+        },
         userName: usernameStored,
         text: comment,
         timestamp: new Date()

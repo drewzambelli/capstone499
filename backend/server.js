@@ -23,14 +23,15 @@ const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const username = encodeURIComponent(user);
 const password = encodeURIComponent(pass);
 
-const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=${GOOGLE_API_KEY}`;
-
 app.use(cors());
 app.use(express.json());
 
 const CommentSchema = new mongoose.Schema({
     userName: String,
-    address: String,
+    address: {
+        latLang: { lat: Number, lng: Number },
+        formatted_address: String
+    },
     comments: [{
         userName: String,
         text: String,
@@ -66,29 +67,12 @@ app.get('/api/getPosts', async (req, res) => {
     }
 });
 
-app.get('/api/checkComment/address=:address', async(req,res) =>{
-
-    try{
-        const location = req.params;
-        const database = await getDatabase();
-        const commentCluster = database.collection('comments');
-        const result = await commentCluster.findOne({address: location.address})
-        console.log(location.lat_ + location.lng_);
-        if(!result) return res.send({address: null});
-        res.status(200).send(result);
-    }catch(error){
-        console.error(error);
-        res.status(404).send("ERROR");
-    }
-
-})
-
 app.get('/api/getLocationAddress/lng=:lng_/lat=:lat_', async (req, res) => {
     try {
         const location = req.params;
         const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat_},${location.lng_}&key=${GOOGLE_API_KEY}`;
         const result = await axios.get(GOOGLE_URL);
-        res.status(200).send({ address: result.data.results[0].formatted_address });
+        res.status(200).send(result.data.results[0] );
     } catch (error) {
         console.error(error);
         res.status(500).send("ERROR");
@@ -107,6 +91,18 @@ app.get('/api/getUser/:id', async (req, res) => {
     }
 });
 
+app.get('/api/getAllLatLong', async (req, res) => {
+    try {
+        const database = await getDatabase();
+        const comments = database.collection('comments');
+        const results = await comments.find({}, { "address.latLang": 1, "_id": 0 }).toArray(); // Added query to get all LatLong
+        res.status(200).send(results);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("ERROR RETRIEVING LAT LONG");
+    }
+});
+
 app.post('/api/postComment', async (req, res) => {
     try {
         const database = await getDatabase();
@@ -119,20 +115,24 @@ app.post('/api/postComment', async (req, res) => {
             timestamp: new Date()
         };
 
-        let existingDoc = await commentsCollection.findOne({ address: address });
+        // Check if a document with the same formatted address exists
+        let existingDoc = await commentsCollection.findOne({ "address.formatted_address": address.formatted_address });
 
         if (existingDoc) {
             const result = await commentsCollection.updateOne(
-                { address: address },
+                { "address.formatted_address": address.formatted_address },
                 { $push: { comments: newComment } }
             );
             existingDoc.comments.push(newComment); // Update the in-memory document
-            io.emit('Comment', newComment); // Emit the new comment
-            res.status(200).send(newComment);
+            io.emit('Comment', existingDoc); // Emit the updated document
+            res.status(200).send(existingDoc);
         } else {
             const newDoc = {
                 userName: userName,
-                address: address,
+                address: {
+                    latLang: address.latLang,
+                    formatted_address: address.formatted_address
+                },
                 comments: [newComment],
                 timestamp: new Date()
             };
@@ -173,6 +173,23 @@ app.post('/api/postData', async (req, res) => {
         res.status(500).send("ERROR LOADING DATA");
     }
 });
+
+app.get('/api/checkComment/address=:address', async(req,res) =>{
+
+    try{
+        const location = req.params;
+        const database = await getDatabase();
+        const commentCluster = database.collection('comments');
+        const result = await commentCluster.findOne({address: location.address})
+        console.log(location.lat_ + location.lng_);
+        if(!result) return res.send({address: null});
+        res.status(200).send(result);
+    }catch(error){
+        console.error(error);
+        res.status(404).send("ERROR");
+    }
+
+})
 
 app.get('/api/checkUserExists/:username', async (req, res) => {
     try {

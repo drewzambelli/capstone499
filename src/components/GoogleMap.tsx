@@ -19,6 +19,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
   const [markers, setMarkers] = useState<Array<{lat: number; lng: number}>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
+  const [markerPositions, setMarkersPosition] = useState<Array<{lat: Number; lng:number}> | null> (null); 
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -35,6 +36,22 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
     }
   }, []);
 
+
+  useEffect(() => {
+    const fetchMarkers = async () => {
+      try {
+        const result = await axios.get('http://localhost:3000/api/getPosts'); // Fetch all comments
+        const fetchedMarkers = result.data.flatMap((item: any) => item.address.latLang);
+        setMarkers(fetchedMarkers);
+      } catch (error) {
+        console.error('Error fetching markers:', error);
+      }
+    };
+  
+    fetchMarkers();
+  }, []); // Fetch markers when the component mounts
+  
+
   const handleDoubleClick = async (event: google.maps.MapMouseEvent) => { // <-- ADD THIS
     console.log('double click routine', event); //testing
     const latLng = (event as any).detail?.latLng; // DO NOT DELETE
@@ -45,20 +62,25 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
       console.log('Coordinates:', lat, lng); // testing
       onDoubleClick(lat, lng);
       setCommentPosition({ lat, lng });
-
       setMarkers((prevMarkers) => [...prevMarkers, {lat,lng}]);
-
 
     } else {
       console.log('No latLng found in event', event); // testing
     }
   };
 
+  const getAllLocations = async () => {
+    const result = await axios.get(`http://localhost:3000/api/getAllLatLong`);
+    for(let i = 0; i < result.data.length; i++){
+      console.log(result.data[i].address.latLang);
+    }
+  }
+
 
   const handleMouseOverMarker = async (marker : {lat: number; lng: number}) =>{
     setHoveredMarker(marker);
     const address = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${marker.lng}/lat=${marker.lat}`);
-    setAddress(address.data.address);
+    setAddress(address.data.formatted_address);
   }
   const handleMouseOut = () => {
     setHoveredMarker(null);
@@ -93,7 +115,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
             position={{lat: hoveredMarker.lat, lng: hoveredMarker.lng}}
             >
               <div className='p-2 text-sm leading-tight'>{address}</div>
-              </InfoWindow>
+            </InfoWindow>
           )}
           {markers.map((marker, index) =>(
             <Marker
