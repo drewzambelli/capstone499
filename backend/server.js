@@ -44,13 +44,24 @@ const DataSchema = new mongoose.Schema({
 
 const MessageSchema = new mongoose.Schema({
     location: {lat: Number, lng: Number},
+    address: String,
     username: String,
     text: String,
     timestamp: {type: Date, default:Date.now},
 })
 
+const FirstMessageSchema = new mongoose.Schema({
+    userName: String,
+    address: String,
+    title: String,
+    comments: {type: [String], default:[]},
+    timestamp: {type: Date, default:Date.now},
+})
+
+
 const Data = mongoose.model('Data', DataSchema);
 const Message = mongoose.model('Message', MessageSchema);
+const FirstMessage = mongoose.model('FirstMessage', FirstMessageSchema);
 
 async function getDatabase() {
     const uri = `mongodb+srv://${username}:${password}@locally-cluster-1.crkbqzb.mongodb.net/?retryWrites=true&w=majority&appName=locally-cluster-1`;
@@ -108,17 +119,33 @@ app.get('/api/getUser/:id', async(req,res) =>{
     }
 })
 
+app.get('/api/checkComment/address=:address', async(req,res) =>{
+
+    try{
+        const location = req.params;
+        const database = await getDatabase();
+        const commentCluster = database.collection('comments');
+        const result = await commentCluster.findOne({address: location.address})
+        console.log(location.lat_ + location.lng_);
+        if(!result) return res.send({address: null});
+        res.status(200).send(result);
+    }catch(error){
+        console.error(error);
+        res.status(404).send("ERROR");
+    }
+
+})
+
 app.post('/api/postComment', async (req, res) => {
     try {
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
-        const {username, text, location} = req.body;
-        console.log(username, text);  //SA(77.10.24) Corrected log statement
-        const newMessage = new Message({username, location, text, timestamp: new Date()})
-        console.log(newMessage);  // SA(77.10.24)This will now log the message correctly
-        // const result = await commentsCollection.insertOne(newMessage);
-        io.emit('Comment', newMessage);
-        res.status(200).send(newMessage);
+        const body =await  req.body;
+        const result = await commentsCollection.updateOne(
+            {address: body.address },
+            {$push : {comments: body.nextComment}}
+        )
+        res.status(200).send(result);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error inserting comment');
@@ -157,6 +184,24 @@ app.post('/api/postData', async (req, res) => {
         res.status(500).send("ERROR LOADING DATA");
     }
 });
+
+app.post('/api/postFirstComment', async(req,res)=>{
+    try {
+        const database = await getDatabase();
+        const commentsCollection = database.collection('comments');
+        const {userName, comments, address, title} = req.body;
+        console.log(userName, title, address);  //SA(77.10.24) Corrected log statement
+        const newMessage = new FirstMessage({userName, address, title, comments, timestamp: new Date()})
+        console.log(newMessage);  // SA(77.10.24)This will now log the message correctly
+        const result = await commentsCollection.insertOne(newMessage);
+        io.emit('Comment', newMessage);
+        res.status(200).send(newMessage);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error inserting comment');
+    }
+
+})
 
 //START CHECK EXISTENCE OF USER ID ALREADY CREATED - 7.7.24
 app.get('/api/checkUserExists/:username', async (req, res) => {

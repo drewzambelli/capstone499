@@ -8,10 +8,11 @@ import axios from 'axios';
 
 interface GoogleMapProps {
   onDoubleClick: (lat: number, lng: number) => void; 
+  onMarkerClick: (lat:number, lng: number) => void;
 
 }
 
-const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODIFY THIS
+const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) => { // <-- MODIFY THIS
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [userLocation, setUserLocation] = useState({ lat: 40.730610, lng: -73.935242 });
   const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); // <-- State for the CommentBox position
@@ -34,7 +35,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODI
     }
   }, []);
 
-  const handleDoubleClick = (event: google.maps.MapMouseEvent) => { // <-- ADD THIS
+  const handleDoubleClick = async (event: google.maps.MapMouseEvent) => { // <-- ADD THIS
     console.log('double click routine', event); //testing
     const latLng = (event as any).detail?.latLng; // DO NOT DELETE
     console.log('latLng:', latLng)
@@ -63,6 +64,10 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick }) => { // <-- MODI
     setHoveredMarker(null);
     setAddress('');
   };
+
+  const handleMarkerClick = (marker: {lat: number; lng: number}) =>{
+    onMarkerClick(marker.lat, marker.lng);
+  }
 
   return (
     <> 

@@ -25,7 +25,8 @@ function App() {
   const [storedUsernames, setStoredUsername] = useState<string | null>('');
   const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); //comment box lat/long
   const [address, setAddress] = useState<string>('');
-
+  const [selectedMarker, setSelectedMarker] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationTaken, setLocationTaken] = useState<boolean> (false);
 
   // START CHECK IF USER ALREADY EXISTS
   const checkUserExists = async () => {
@@ -46,6 +47,20 @@ function App() {
     }
   };
 
+  const checkLocationExists =  async(lat: number, lng: number) =>{
+    const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`)
+    const address = result.data.address;
+    try{
+      let locationExist = await axios.get(`http://localhost:3000/api/checkComment/address=${address}`);
+      if(locationExist.data.address === null){
+        setLocationTaken(true)
+      }
+    }catch(error){
+      console.error(error)
+    }
+      // console.log("address", address);
+  }
+
 
   useEffect(() => {
     checkUserExists();
@@ -58,15 +73,21 @@ function App() {
 
   const handleMapDoubleClick = async (lat: number, lng: number) => { // <-- ADD THIS
     console.log('in app.tsx function')
+    checkLocationExists(lat,lng);
     setCommentPosition({ lat, lng });
     let result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
     setAddress(result.data.address);
   
   };
 
+  const handleMarkerClick = (lat:number, lng:number)=>{
+    setSelectedMarker({lat,lng});
+  }
+
   const handleCloseCommentBox = () => {
-    setCommentPosition(null);
+    setLocationTaken(false);
   };
+
 
 
   return (
@@ -76,10 +97,10 @@ function App() {
       {!userExists && <UserName />}
       {userExists && (
         <>
-          <GoogleMap onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
+          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick = {handleMapDoubleClick} /> {/*modified this line for the dblclick commentbox pop up*/}
           {/*7.6.24 - DARIEL, COMMENT THIS LINE OUT TO SEE THE COMMENTS SECTION APPEAR THAT YOU WROTE*/}
-          {commentPosition && <Chat address={address} usernameStored={storedUsernames}/>}
-          {/* {commentPosition && <CommentBox lat={commentPosition.lat} lng={commentPosition.lng} onClose={handleCloseCommentBox} />} commentBox.tsx */}
+          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames}/>}
+          {locationTaken && <CommentBox address={address} onClose={handleCloseCommentBox} />} commentBox.tsx
         </>
       )}
     </div>

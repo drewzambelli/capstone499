@@ -18,9 +18,11 @@ function formatTimestamp(timestamp: string) {
 interface ChatProps{
   usernameStored : string | null;
   address? :string;
+  lat: number;
+  lng: number;
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored, address}) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, address, lng,lat}) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState([]);
   const socketRef = useRef<Socket | null>(null);
@@ -65,9 +67,8 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address}) => {
     try {
       console.log("POST USER: ", usernameStored);
       await axios.post('http://localhost:3000/api/postComment', {
-        location: {lng, lat},
-        username: usernameStored,
-        text: comment,
+        address: address,
+        nextComment: comment
       });
       setComment(''); // Clears input box after sending
 
@@ -124,10 +125,14 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address}) => {
               <li key={doc._id} className={doc.username === usernameStored ? 'user-message' : ''}>
                 <div className='chat-message'>
                   <div className='user-name'>
-                    {doc.username}: 
+                    {doc.userName}: 
                   </div>
                   <div className='chat-content'>
-                    {doc.text}
+                    {doc.comments.map((comment,index) =>(
+                      <div key={index}>
+                        {comment}
+                        </div>
+                    ))}
                   </div>
                 </div> 
                 <p className='time-stamp'>{formatTimestamp(doc.timestamp)}</p>
