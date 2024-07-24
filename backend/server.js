@@ -47,13 +47,18 @@ async function getDatabase() {
     const client = new MongoClient(uri);
     try {
         await client.connect();
-        await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(uri);
         const database = client.db('capstone');
         return database;
     } catch (e) {
         console.error(e);
     }
 }
+
+
+/**
+ * @about: Getting all the comments from the mongodb database
+ */
 
 app.get('/api/getPosts', async (req, res) => {
     try {
@@ -67,6 +72,11 @@ app.get('/api/getPosts', async (req, res) => {
     }
 });
 
+
+/**
+ * @about: Returns a location based on the lat and lng given from the params
+ */
+
 app.get('/api/getLocationAddress/lng=:lng_/lat=:lat_', async (req, res) => {
     try {
         const location = req.params;
@@ -78,6 +88,11 @@ app.get('/api/getLocationAddress/lng=:lng_/lat=:lat_', async (req, res) => {
         res.status(500).send("ERROR");
     }
 });
+
+/**
+ * @about: returns the user given the socketID (not currently in use might remove)
+ * 
+ */
 
 app.get('/api/getUser/:id', async (req, res) => {
     try {
@@ -91,6 +106,11 @@ app.get('/api/getUser/:id', async (req, res) => {
     }
 });
 
+/**
+ * 
+ * @about: returns all the Latitude and Longitudes from the mongo db 
+ */
+
 app.get('/api/getAllLatLong', async (req, res) => {
     try {
         const database = await getDatabase();
@@ -102,6 +122,10 @@ app.get('/api/getAllLatLong', async (req, res) => {
         res.status(500).send("ERROR RETRIEVING LAT LONG");
     }
 });
+
+/**
+ * @about: post the comment given the username, the actual comment, and the address
+ */
 
 app.post('/api/postComment', async (req, res) => {
     try {
@@ -118,7 +142,7 @@ app.post('/api/postComment', async (req, res) => {
         // Check if a document with the same formatted address exists
         let existingDoc = await commentsCollection.findOne({ "address.formatted_address": address.formatted_address });
 
-        if (existingDoc) {
+        if (existingDoc) { //check if the address is already in the db and just pushes the comment to the comments array
             const result = await commentsCollection.updateOne(
                 { "address.formatted_address": address.formatted_address },
                 { $push: { comments: newComment } }
@@ -145,6 +169,11 @@ app.post('/api/postComment', async (req, res) => {
         res.status(500).send('Error inserting comment');
     }
 });
+
+/**
+ * @about: sends the users data to the locally-usernames collection
+ * 
+ */
 
 app.post('/api/postData', async (req, res) => {
     try {
@@ -174,6 +203,11 @@ app.post('/api/postData', async (req, res) => {
     }
 });
 
+/**
+ * 
+ * @about: check if the address is already in the database for the comment box to appear. 
+ */
+
 app.get('/api/checkComment/address=:address', async(req,res) =>{
 
     try{
@@ -190,6 +224,11 @@ app.get('/api/checkComment/address=:address', async(req,res) =>{
     }
 
 })
+
+/**
+ * @about: check if the user exists in the database given the username
+ * 
+ */
 
 app.get('/api/checkUserExists/:username', async (req, res) => {
     try {

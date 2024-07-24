@@ -1,10 +1,6 @@
-import { Container, Row, Col } from "react-bootstrap"
 import GoogleMap from "./components/GoogleMap"
-import Header from "./components/Header"
 import Chat from "./components/Chat"
-import OpenData from "./components/OpenData"
-import React, { useState, useEffect } from 'react'
-import firebase from 'firebase/app'
+import { useState, useEffect } from 'react'
 import './App.css'
 import UserName from './components/userName';
 import CommentBox from './components/CommentBox';
@@ -83,11 +79,11 @@ function App() {
       {userExists && (
         <>
           <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
-          <Chat address={address} usernameStored={storedUsernames}/> 
-          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />}
+          <Chat address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
+          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
           {locationTaken && latLng && (
             <CommentBox latLng={latLng} address={address} onClose={handleCloseCommentBox} />
-          )}
+          )} {/*When a near pin gets dropped bring up the comment box. */}
         </>
       )}
     </div>

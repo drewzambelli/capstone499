@@ -19,7 +19,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
   const [markers, setMarkers] = useState<Array<{lat: number; lng: number}>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
-  const [markerPositions, setMarkersPosition] = useState<Array<{lat: Number; lng:number}> | null> (null); 
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -61,7 +60,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
       const lng = latLng.lng;
       console.log('Coordinates:', lat, lng); // testing
       onDoubleClick(lat, lng);
-      setCommentPosition({ lat, lng });
+      // setCommentPosition({ lat, lng });
       setMarkers((prevMarkers) => [...prevMarkers, {lat,lng}]);
 
     } else {
@@ -93,7 +92,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
 
   return (
     <> 
-      <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}> {/*{env.GOOGLE_MAPS_API_KEY}>*/}
+      <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}> 
       <Header onPlaceSelect={setSelectedPlace} /> {/*DZ - 6.29.24: THIS LINE CREATES THE HEADER WHICH ACTUALLY WORKS WITH AUTOCOMPLETE/SEARCH */}
         <Map
           className='map-class'

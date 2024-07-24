@@ -91,7 +91,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value);
   };
 
@@ -145,6 +145,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
                       {comment.text}
                     </div>
                     <p className='time-stamp'>{formatTimestamp(comment.timestamp)}</p>
+                    <p className='time-stamp'>{doc.address.formatted_address}</p>
                   </div>
                 </li>
               ))
