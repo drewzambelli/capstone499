@@ -15,14 +15,14 @@ function formatTimestamp(timestamp: string) {
   return date.toLocaleString('en-US', options).replace(',', ' @');
 }
 
-interface ChatProps{
-  usernameStored : string | null;
-  address? :string;
+interface ChatProps {
+  usernameStored: string | null;
+  address?: string;
   lat: number;
   lng: number;
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored, address, lng,lat}) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState<any[]>([]);
   const socketRef = useRef<Socket | null>(null);
