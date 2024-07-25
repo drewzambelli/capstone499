@@ -398,3 +398,131 @@
 }
 
 
+
+
+
+/*CRIME BOX STYLES*/
+
+.crime-container {
+  position: fixed;
+  right: 50px; /* Positioned on the right side */
+  top: 50%;
+  width: 400px;
+  padding: 15px 15px;
+  overflow-y: auto;
+  background-color: black;
+  border-radius: 40px;
+  opacity: 1;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
+}
+
+.crime-container .crime-box{
+ 
+  color: black; 
+  border-radius: 20px; 
+  padding: 10px; 
+  margin-bottom: 10px; 
+  height: 625px; 
+  overflow-y: auto; 
+  scrollbar-width: thin; 
+  scrollbar-color: #ff7798 #2c2c2c; 
+}
+
+.chat-container .crime-header{
+  display: flex;
+  height: 70px;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+.crime-header .header-text{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  font-size: 35px;
+  font-family: "Modak";
+  background-color: white;
+  width: 350px;
+  border-radius: 40px;
+  padding: 5px 15px 0px 15px;
+}
+
+.crime-header .hide-chat-button{
+  padding-top: 5px;
+  transition: color 200ms ease-in-out;
+}
+
+.crime-header .hide-chat-button:hover{
+  color: #ff7798 ;
+}
+
+/* Media query for screens smaller than 1540px */
+@media (max-width: 1540px) {
+  .crime-container {
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    top: 150px;
+  }
+ 
+}
+
+.crime-container.hidden {
+  opacity: 0; /* Fully transparent */
+  transform: translateY(-100%); /* Move it up out of view */
+  visibility: hidden; /* Remove from flow after animation */
+}
+
+.crime-container.visible {
+  opacity: 1; /* Fully visible */
+  visibility: visible; /* Make visible */
+}
+
+.crime-container .chat-header{
+  display: flex;
+  height: 70px;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+.crime-header .header-text{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  font-size: 35px;
+  font-family: "Modak";
+  background-color: white;
+  width: 350px;
+  border-radius: 40px;
+  padding: 5px 15px 0px 15px;
+}
+
+.crime-header .hide-chat-button{
+  padding-top: 5px;
+  transition: color 200ms ease-in-out;
+}
+
+.crime-header .hide-crime-button:hover{
+  color: #ff7798 ;
+}
+
+.show-crime-button {
+  position: fixed;
+  left: 20px;
+  bottom: 100px;
+  background: none;
+  border-radius: 80px;
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 10px 15px;
+  transition: color .2s ease-in-out; /* Add transition for smooth effect */
+  background-color: black;
+}
+
+.show-crime-button:hover {
+  color: #ff7798; /* Visual feedback on hover */
+}
