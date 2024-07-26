@@ -14,20 +14,34 @@ interface GoogleMapProps {
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) => { // <-- MODIFY THIS
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
-  const [userLocation, setUserLocation] = useState({ lat: 40.730610, lng: -73.935242 });
+  const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null); /*{ lat: 40.730610, lng: -73.935242 }*/
   const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null); // <-- State for the CommentBox position
   const [markers, setMarkers] = useState<Array<{lat: number; lng: number}>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
 
+  //function to open map roughly where user is (if you are hard-wired to internet on desktop, the location is likely wherever your ISP routed through)
   useEffect(() => {
     if (navigator.geolocation) {
+      //console.log("we just entered navigator IF statement") //for testing
       navigator.geolocation.getCurrentPosition(
         position => {
+          //console.log('in navigator thing') //for testing
+          //const lat = position.coords.latitude;
+          //const lng = position.coords.longitude;
+          //console.log('Latitude:', lat); // Print latitude to console
+          //console.log('Longitude:', lng); // Print longitude to console
           setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
         },
         error => {
-          console.error('Error getting user location:', error);
+          //This if statement is to tell you why we aren't opening site at your location - in case user
+          //accidentally hasn't allowed geolocation for the site/accidentally clicked 'block'
+          if (error.code === error.PERMISSION_DENIED) {
+            console.error('Error getting user location: User denied Geolocation');
+            alert('Location access is required to show your current location on the map. Please allow location access in your browser settings.');
+          } else {
+            console.error('Error getting user location:', error);
+          }
         }
       );
     } else {
@@ -97,7 +111,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
         <Map
           className='map-class'
           defaultCenter={userLocation}
-          defaultZoom={19}
+          defaultZoom={19} //if we don't have defaultZoom, zoom goes haywire and opens at global level
           gestureHandling={'greedy'}
           disableDefaultUI={true}
           options={{ disableDoubleClickZoom: true }}
