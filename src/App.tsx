@@ -6,6 +6,7 @@ import UserName from './components/userName';
 import CommentBox from './components/CommentBox';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import axios from "axios"
+import Account from "./components/Account";
 
 export type AutocompleteMode = { id: string; label: string };
 
@@ -78,6 +79,7 @@ function App() {
       {!userExists && <UserName />}
       {userExists && (
         <>
+          <Account/>
           <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
           <Chat address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
