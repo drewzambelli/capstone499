@@ -47,7 +47,7 @@ const CrimeBox: React.FC<CrimeProps> = ({ address, lat, ng }) => {
       </div>
       {!isCrimeVisible && (
         <button className='show-crime-button' onClick={handleShowCrime}>
-          <i className='bi bi-chat-right-text'></i>
+          <i className='bi bi-bar-chart-fill'></i>
         </button>
       )}
     </div>

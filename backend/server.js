@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const cron = require("node-cron")
 const axios = require('axios');
 
 const app = express();
@@ -37,7 +38,7 @@ const CommentSchema = new mongoose.Schema({
         text: String,
         timestamp: { type: Date, default: Date.now }
     }],
-    timestamp: { type: Date, default: Date.now }
+    timestamp: { type: Date, default: Date.now}
 });
 
 const Comment = mongoose.model('Comment', CommentSchema);
@@ -54,6 +55,24 @@ async function getDatabase() {
         console.error(e);
     }
 }
+
+cron.schedule('0 * * * *', async() =>{
+    try{
+        const db = await getDatabase();
+        const commentsCollection = db.collection('comments');
+        const now = new Date();
+        const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        await commentsCollection.updateMany(
+            {},
+            { $pull: { comments: { timestamp: { $lt: yesterday } } } }
+        );
+        console.log("OLD COMMENTS REMOVED");
+    }catch(error){
+        console.log("error removing old comments", error);
+    }
+})
+
 
 
 /**
