@@ -19,6 +19,8 @@ function App() {
   const [selectedMarker, setSelectedMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [locationTaken, setLocationTaken] = useState<boolean>(false);
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
+  const [isPanning, setIsPanning] = useState(false); // DZ WAS HERE: Added state for panning
+  const [mapInstance, setMapInstance] = useState<any>(null); // DZ WAS HERE: Added state for map instance
 
   const checkUserExists = async () => {
     const storedUsername = localStorage.getItem('username');
@@ -68,6 +70,7 @@ function App() {
   };
 
   const handleMarkerClick = (lat: number, lng: number) => {
+    console.log("handleMarkerClick")
     setSelectedMarker({ lat, lng });
   }
 
@@ -75,15 +78,49 @@ function App() {
     setLocationTaken(false);
   };
 
+  const setCurrentLocation = (lat: number, lng: number) => {
+    console.log("Updating current location to: ", lat, lng);
+    setLatLng({ lat, lng });
+  };
+
+  const handleDragStart = () => {
+    setIsPanning(true);
+    console.log('User started panning the map1');
+  };
+
+  const handleDragEnd = () => {
+    setIsPanning(false);
+    console.log('User stopped panning the map1');
+    if (mapInstance) {
+      const center = mapInstance.getCenter();
+      console.log('Center:', center); // Log center
+      if (center) {
+        const lat = center.lat();
+        const lng = center.lng();
+        console.log('Lat:', lat, 'Lng:', lng); // Log lat and lng
+        setCurrentLocation(lat, lng); // Update the current location with the new center
+      }
+    }
+  };
+
+  const handleMapLoad = (map: any) => {
+    setMapInstance(map);
+    console.log('Map loaded:', map); // Log map load
+
+  };
+
   return (
+    
     <div style={{ height: '100vh' }}>
+      
       {!userExists && <UserName />}
-      {userExists && (
+      {userExists && ( 
         <>
           <Account/>
-          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
+          
+          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} setCurrentLocation={setCurrentLocation} onPanningStart={handleDragStart} onPanningEnd={handleDragEnd} onLoad={handleMapLoad}/>
           <Chat address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
-          <CrimeBox/>
+          {latLng && <CrimeBox address={address} lat={latLng.lat} lng={latLng.lng} />} {/* Pass lat, lng, and address to CrimeBox */}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
           {locationTaken && latLng && (
             <CommentBox latLng={latLng} address={address} onClose={handleCloseCommentBox} />

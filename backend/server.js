@@ -6,6 +6,8 @@ const cors = require('cors');
 const { Server } = require('socket.io');
 const cron = require("node-cron")
 const axios = require('axios');
+const XLSX = require('xlsx'); //DZ testing
+const ExcelJS = require('exceljs'); // DZ testing
 
 const app = express();
 const server = require('http').createServer(app);
@@ -26,6 +28,15 @@ const password = encodeURIComponent(pass);
 
 app.use(cors());
 app.use(express.json());
+
+// DZ TESTING 7.27: Define boroughs and their Excel file paths
+const boroughs = {
+    "Bronx": "BACKEND/data/bronx.xlsx",
+    "Brooklyn": "BACKEND/data/brooklyn.xlsx",
+    "Manhattan": "BACKEND/data/manhattan.xlsx",
+    "Queens": "BACKEND/data/queens.xlsx",
+    "Staten Island": "BACKEND/data/staten_island.xlsx"
+};
 
 const CommentSchema = new mongoose.Schema({
     userName: String,
@@ -101,6 +112,11 @@ app.get('/api/getLocationAddress/lng=:lng_/lat=:lat_', async (req, res) => {
         const location = req.params;
         const GOOGLE_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat_},${location.lng_}&key=${GOOGLE_API_KEY}`;
         const result = await axios.get(GOOGLE_URL);
+
+        // DZ TEST 7.27: Log borough names
+        const boroughName = result.data.results[0].address_components.find(component => component.types.includes("political")).long_name;
+        console.log("Borough Name:", boroughName);
+
         res.status(200).send(result.data.results[0] );
     } catch (error) {
         console.error(error);
@@ -263,6 +279,40 @@ app.get('/api/checkUserExists/:username', async (req, res) => {
     } catch (e) {
         console.error(e);
         res.status(500).send('Error checking user');
+    }
+});
+
+/**
+ Returns crime statistics for a specific borough
+ *DZ TESTING
+ */
+app.get('/api/crimeStats/:borough', async (req, res) => {
+    const borough = req.params.borough;
+    const filePath = boroughs[borough];
+
+    if (!filePath) {
+        return res.status(404).send('Borough not found');
+    }
+
+    try {
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.readFile(filePath);
+        const worksheet = workbook.getWorksheet(1);
+        const data = [];
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber > 1) { // Assuming the first row is the header
+                const rowData = {};
+                row.eachCell((cell, colNumber) => {
+                    rowData[`col${colNumber}`] = cell.value;
+                });
+                data.push(rowData);
+            }
+        });
+
+        res.status(200).send(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error reading crime statistics');
     }
 });
 
