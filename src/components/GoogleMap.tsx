@@ -104,6 +104,21 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
     onMarkerClick(marker.lat, marker.lng);
   }
 
+  const handleDragStart = () =>{
+    console.log("Being Dragged Start");
+  }
+  const handleDragEnd = async (map:google.maps.Map) =>{
+    console.log("Being Dragged End");
+    const center = map.getCenter();
+    if(center){
+      const lat = center.lat();
+      const lng = center.lng();
+      console.log("Map center after drag:", {lat,lng});
+      const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
+      console.log(result.data.address_components[3].long_name);
+    }
+  }
+
   return (
     <> 
       <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}> 
@@ -116,6 +131,8 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
           disableDefaultUI={true}
           options={{ disableDoubleClickZoom: true }}
           onDblclick = {handleDoubleClick} 
+          onDragstart={handleDragStart}
+          onDragend={(event)=> handleDragEnd(event.map)}
         >
           {/* <Marker 
             position={userLocation}
