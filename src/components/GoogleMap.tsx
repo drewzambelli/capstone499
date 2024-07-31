@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { APIProvider, InfoWindow, Map, MapMouseEvent, Marker } from '@vis.gl/react-google-maps';
 import env from '../env/env';
-import Header from './Header'; // Make sure this path is correct
+import Header from './Header'; 
 import MapHandler from './auto-components/MapHandler';
 import IMAGES from './img/images';
 import axios from 'axios';
+import CrimeBox from './crime';
 
 interface GoogleMapProps {
   onDoubleClick: (lat: number, lng: number) => void; 
   onMarkerClick: (lat:number, lng: number) => void;
-
 }
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) => { // <-- MODIFY THIS
@@ -19,6 +19,8 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
   const [markers, setMarkers] = useState<Array<{lat: number; lng: number}>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
+  const [currentCenter, setCurrentCenter] = useState({ lat: 40.76786, lng: -73.96453 });  // Default Hunter College
+
 
   //function to open map roughly where user is (if you are hard-wired to internet on desktop, the location is likely wherever your ISP routed through)
   useEffect(() => {
@@ -108,13 +110,15 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
   const handleDragStart = () =>{
     console.log("Being Dragged Start");
   }
-  const handleDragEnd = async (map:google.maps.Map) =>{
+
+  const handleDragEnd = async (map:google.maps.Map) => {
     console.log("Being Dragged End");
     const center = map.getCenter();
-    if(center){
+    if (center) {
       const lat = center.lat();
       const lng = center.lng();
-      console.log("Map center after drag:", {lat,lng});
+      console.log("Map center after drag:", { lat, lng });
+      setCurrentCenter({ lat, lng });  // Update state with new center
       const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
       console.log(result.data.address_components[3].long_name);
     }
@@ -162,6 +166,8 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
 
         </Map>
         <MapHandler place={selectedPlace} />
+        <CrimeBox address="" lat={currentCenter.lat} lng={currentCenter.lng} />
+
       </APIProvider>
     </>
   );

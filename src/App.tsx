@@ -9,6 +9,7 @@ import axios from "axios"
 import Account from "./components/Account";
 import CrimeBox from './components/crime';
 
+
 export type AutocompleteMode = { id: string; label: string };
 
 function App() {
@@ -83,7 +84,7 @@ function App() {
           <Account/>
           <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
           <Chat address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
-          <CrimeBox/>
+          {/*<CrimeBox/>*/}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
           {locationTaken && latLng && (
             <CommentBox latLng={latLng} address={address} onClose={handleCloseCommentBox} />
