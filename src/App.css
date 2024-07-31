@@ -419,8 +419,7 @@
 }
 
 .crime-container .crime-box{
- 
-  color: black; 
+  background-color: #2c2c2c; 
   border-radius: 20px; 
   padding: 10px; 
   margin-bottom: 10px; 
@@ -430,14 +429,17 @@
   scrollbar-color: #ff7798 #2c2c2c; 
 }
 
-.chat-container .crime-header{
+
+
+.crime-container .crime-header {
   display: flex;
-  height: 70px;
   justify-content: center;
+  align-items: center;
+  height: 70px;
   padding-bottom: 10px;
 }
 
-.crime-header .header-text{
+.crime-header .header-text {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -448,12 +450,15 @@
   width: 350px;
   border-radius: 40px;
   padding: 5px 15px 0px 15px;
+  margin: 0 auto;
 }
 
-.crime-header .hide-chat-button{
-  padding-top: 5px;
-  transition: color 200ms ease-in-out;
+.hide-crime-button {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
+
 
 .crime-header .hide-chat-button:hover{
   color: #ff7798 ;
@@ -509,10 +514,36 @@
   color: #ff7798 ;
 }
 
+.crime-container .borough-name{
+  color: white;
+  text-align: center;
+  font-size: 25px;
+}
+
+.crime-container .crime-statistics{
+  color: white;
+  font-size: 19px;
+}
+
+.crime-container .crime-stat{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted;
+}
+
+.crime-container .crime-name{
+  color:#ff7798;
+}
+
+.crime-container .crime-freq{
+  
+}
+
+
 .show-crime-button {
   position: fixed;
-  left: 20px;
-  bottom: 100px;
+  right: 20px;
+  bottom: 20px;
   background: none;
   border-radius: 80px;
   color: white;
@@ -526,3 +557,5 @@
 .show-crime-button:hover {
   color: #ff7798; /* Visual feedback on hover */
 }
+
+
