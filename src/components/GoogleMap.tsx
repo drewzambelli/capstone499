@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { APIProvider, InfoWindow, Map, Marker } from '@vis.gl/react-google-maps';
+import { APIProvider, InfoWindow, Map, MapMouseEvent, Marker } from '@vis.gl/react-google-maps';
 import env from '../env/env';
 import Header from './Header'; // Make sure this path is correct
 import MapHandler from './auto-components/MapHandler';
@@ -32,6 +32,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
           //console.log('Latitude:', lat); // Print latitude to console
           //console.log('Longitude:', lng); // Print longitude to console
           setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+          // console.log(userLocation);
         },
         error => {
           //This if statement is to tell you why we aren't opening site at your location - in case user
@@ -65,7 +66,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
   }, []); // Fetch markers when the component mounts
   
 
-  const handleDoubleClick = async (event: google.maps.MapMouseEvent) => { // <-- ADD THIS
+  const handleDoubleClick = async (event:MapMouseEvent) => { // <-- ADD THIS
     console.log('double click routine', event); //testing
     const latLng = (event as any).detail?.latLng; // DO NOT DELETE
     console.log('latLng:', latLng)
@@ -125,7 +126,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
       <Header onPlaceSelect={setSelectedPlace} /> {/*DZ - 6.29.24: THIS LINE CREATES THE HEADER WHICH ACTUALLY WORKS WITH AUTOCOMPLETE/SEARCH */}
         <Map
           className='map-class'
-          defaultCenter={userLocation}
+          defaultCenter={userLocation as google.maps.LatLngAltitudeLiteral}
           defaultZoom={19} //if we don't have defaultZoom, zoom goes haywire and opens at global level
           gestureHandling={'greedy'}
           disableDefaultUI={true}
@@ -148,12 +149,14 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
             </InfoWindow>
           )}
           {markers.map((marker, index) =>(
-            <Marker
-            key={index}
-            position ={{lat: marker.lat, lng: marker.lng}}
-            icon={IMAGES.icon}
-            onMouseOver={() => handleMouseOverMarker(marker)}
-            />
+            <div className='relative'>
+              <Marker
+              key={index}
+              position ={{lat: marker.lat, lng: marker.lng}}
+              icon={IMAGES.icon}
+              onMouseOver={() => handleMouseOverMarker(marker)}
+              />
+            </div>
           ))}
 
 
