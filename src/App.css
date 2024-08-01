@@ -91,16 +91,20 @@
   left: 50%; 
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: rgba(255, 192, 203, 0.836);
+  background-color: #ff7798;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   z-index: 1100; /*put box on top of map */
+  border-style: solid;
+  border-width: 5px;
+  border-color: black;
 }
 
 .username-form h2 {
   text-align: center;
   margin-bottom: 20px;
   font-weight: bold;
+  color: black;
 }
 
 .username-form form {
@@ -115,7 +119,7 @@
   margin-bottom: 10px;
   border: none;
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: white;
   outline: none;
   text-align: center;
 }
@@ -131,14 +135,15 @@
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #ff69b4; /* Pink color */
+  background-color: black; /* Pink color */
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .username-form button[type="submit"]:hover {
-  background-color: #e64980; /* Lighter pink on hover */
+  background-color: white; /* Lighter pink on hover */
+  color: black;
 }
 
 .comment-class {
@@ -237,8 +242,7 @@
 @media (max-width: 1540px) {
   .chat-container {
     left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust for the width of the container */
-    top: 150px; /* Override the top position */
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -468,8 +472,7 @@
 @media (max-width: 1540px) {
   .crime-container {
     left: 50%; /* Center horizontally */
-    transform: translateX(-50%);
-    top: 150px;
+    transform: translate(-50%, -50%);
   }
  
 }
@@ -556,6 +559,35 @@
 
 .show-crime-button:hover {
   color: #ff7798; /* Visual feedback on hover */
+}
+
+.logout-button {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  background: none;
+  border-radius: 80px;
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 10px 15px;
+  transition: color .2s ease-in-out; /* Add transition for smooth effect */
+  background-color: black;
+  z-index: 999;
+}
+
+.logout-button:hover {
+  color: #ff7798; /* Visual feedback on hover */
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 1540px) {
+  .logout-button {
+    left: 50%; /* Center horizontally */
+    bottom: 20px; /* Positioned 20px above the bottom */
+    top: auto; /* Override the top position */
+    transform: translateX(-50%); /* Align center properly */
+  }
 }
 
 

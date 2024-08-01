@@ -8,6 +8,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import axios from "axios"
 import Account from "./components/Account";
 import CrimeBox from './components/crime';
+import LogoutButton from './components/LogOut'; 
 
 
 export type AutocompleteMode = { id: string; label: string };
@@ -50,7 +51,13 @@ function App() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('username'); // Assuming username is stored in local storage
+    setUserExists(false);
+    setStoredUsername(null); // Optionally reset other states related to the user session
+  };
 
   useEffect(() => {
     checkUserExists();
@@ -82,6 +89,7 @@ function App() {
       {userExists && (
         <>
           <Account/>
+          <LogoutButton onLogout={logout} />
           <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
           <Chat address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
           {/*<CrimeBox/>*/}
