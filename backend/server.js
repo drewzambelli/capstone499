@@ -6,6 +6,7 @@ const cors = require('cors');
 const { Server } = require('socket.io');
 const cron = require("node-cron")
 const axios = require('axios');
+const { data } = require('autoprefixer');
 
 const app = express();
 const server = require('http').createServer(app);
@@ -188,6 +189,20 @@ app.post('/api/postComment', async (req, res) => {
         res.status(500).send('Error inserting comment');
     }
 });
+
+
+app.get('/api/getCommentsByLatLng', async(req,res)=>{
+    try{
+        const {lat, lng} = req.query;
+        const database = await getDatabase();
+        const commentsCollection = database.collection('comments');
+        const comments = await commentsCollection.findOne({"address.latLang.lat": parseFloat(lat), "address.latLang.lng": parseFloat(lng)});
+        res.status(200).send(comments.comments)
+    }catch(error){
+        console.error(error)
+        res.status(500).send("ERROR retrieving comments")
+    }
+})
 
 /**
  * @about: sends the users data to the locally-usernames collection

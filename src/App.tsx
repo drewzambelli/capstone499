@@ -20,6 +20,7 @@ function App() {
   const [selectedMarker, setSelectedMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [locationTaken, setLocationTaken] = useState<boolean>(false);
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
+  const [comments, setComments] = useState<any[]>([]);
 
   const checkUserExists = async () => {
     const storedUsername = localStorage.getItem('username');
@@ -68,8 +69,10 @@ function App() {
     setLatLng({ lat, lng });
   };
 
-  const handleMarkerClick = (lat: number, lng: number) => {
+  const handleMarkerClick = async (lat: number, lng: number) => {
     setSelectedMarker({ lat, lng });
+    const result = await axios.get(`http://localhost:3000/api/getCommentsByLatLng?lat=${lat}&lng=${lng}`);
+    setComments(result.data.comments);
   }
 
   const handleCloseCommentBox = () => {
@@ -83,9 +86,9 @@ function App() {
         <>
           <Account/>
           <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
-          <Chat address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
+          <Chat comments={comments} address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
           {/*<CrimeBox/>*/}
-          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
+          {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} comments={comments} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
           {locationTaken && latLng && (
             <CommentBox latLng={latLng} address={address} onClose={handleCloseCommentBox} />
           )} {/*When a near pin gets dropped bring up the comment box. */}

@@ -20,14 +20,20 @@ interface ChatProps {
   address?: string;
   lat?: number;
   lng?: number;
+  comments: any[];
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng }) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments }) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState<any[]>([]);
   const socketRef = useRef<Socket | null>(null);
   const endOfMessagesRef = useRef<HTMLLIElement | null>(null);
   const [isChatVisible, setIsChatVisible] = useState(true);
+
+
+  useEffect (() =>{
+    setDocs(comments)
+  }, [comments])
 
   useEffect(() => {
     const fetchData = async () => {
