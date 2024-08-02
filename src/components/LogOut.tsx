@@ -7,7 +7,7 @@ interface LogoutButtonProps {
 
 const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   return (
-    <button onClick={onLogout} className="logout-button">
+    <button onClick={onLogout} title='Logout' className="logout-button">
       <i className="bi bi-door-open"></i>
     </button>
   );

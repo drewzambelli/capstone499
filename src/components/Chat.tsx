@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
+import DropDown from './DropDown';
 
 function formatTimestamp(timestamp: string) {
   const date = new Date(timestamp);
@@ -162,7 +163,11 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
             <label className='text-white'>Add Comment To:</label>
             <label className='text-white'>{address}</label>
           </div>
+          <div className='flex justify-center pb-2'>
+            <DropDown/>
+          </div>
           <div className='input-container'>
+
             <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' value={comment} onChange={handleChange}></textarea>
             <button type='button' className='send-button' onClick={async (event) => { await handleCommentSubmit(event); scrollToBottom(); }}>
               <i className='bi bi-arrow-up'></i>

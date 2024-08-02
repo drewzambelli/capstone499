@@ -88,7 +88,11 @@ function App() {
 
   return (
     <div style={{ height: '100vh' }}>
-      {!userExists && <UserName />}
+      {!userExists &&
+      
+      <UserName />
+      
+      }
       {userExists && (
         <>
           <Account/>
