@@ -19,8 +19,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
   const [markers, setMarkers] = useState<Array<{lat: number; lng: number}>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
-  const [currentCenter, setCurrentCenter] = useState<{lat:number; lng:number} | null>({});  // Default Hunter College
-
+  const [currentCenter, setCurrentCenter] = useState<{lat:number; lng:number} | null>({});  
 
 
   //function to open map roughly where user is (if you are hard-wired to internet on desktop, the location is likely wherever your ISP routed through)
@@ -36,7 +35,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ onDoubleClick, onMarkerClick }) =
           //console.log('Longitude:', lng); // Print longitude to console
           setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
           setCurrentCenter ({ lat: position.coords.latitude, lng: position.coords.longitude })
-          // console.log(userLocation);
         },
         error => {
           //This if statement is to tell you why we aren't opening site at your location - in case user
