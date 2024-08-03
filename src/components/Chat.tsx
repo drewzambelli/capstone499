@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
 import DropDown from './DropDown';
+import { Button } from 'react-bootstrap';
 
 function formatTimestamp(timestamp: string) {
   const date = new Date(timestamp);
@@ -22,9 +23,10 @@ interface ChatProps {
   lat?: number;
   lng?: number;
   comments: any[];
+  onGoToLocation: (lat: number, lng: number) => void;
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments }) => {
+const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments, onGoToLocation }) => {
   const [comment, setComment] = useState<string>('');
   const [docs, setDocs] = useState<any[]>([]);
   const socketRef = useRef<Socket | null>(null);
@@ -32,9 +34,9 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
   const [isChatVisible, setIsChatVisible] = useState(true);
 
 
-  useEffect (() =>{
-    setDocs(comments)
-  }, [comments])
+  useEffect(() => {
+    setDocs(comments);
+  }, [comments]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,15 +62,13 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
         const updatedDocs = [...prevDocs];
         const existingDocIndex = updatedDocs.findIndex(doc => doc.address.formatted_address === newComment.address.formatted_address);
         if (existingDocIndex !== -1) {
-          // Add new comment to the existing document
           updatedDocs[existingDocIndex].comments.push(newComment.comments[0]);
         } else {
-          // If the document does not exist, add it to the docs array
           updatedDocs.push(newComment);
         }
         return updatedDocs;
       });
-      scrollToBottom();  // Scroll to bottom when a new comment is received
+      scrollToBottom();
     });
 
     return () => {
@@ -98,7 +98,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
     }
   };
 
-  const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value);
   };
 
@@ -113,13 +113,13 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
     if (chatContainer) {
       chatContainer.style.opacity = '0';
       setTimeout(() => {
-        setIsChatVisible(false); // This changes the class to hidden, applying visibility: hidden;
+        setIsChatVisible(false);
       }, 150); // This should match the duration of the CSS transition
     }
   };
 
   const handleShowChat = () => {
-    setIsChatVisible(true); // This will remove the 'hidden' class and add 'visible'
+    setIsChatVisible(true);
     setTimeout(() => {
       const chatContainer = document.querySelector('.chat-container');
       if (chatContainer) {
@@ -154,6 +154,9 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
                     <p className='time-stamp'>{formatTimestamp(comment.timestamp)}</p>
                     <p className='time-stamp'>{doc.address.formatted_address}</p>
                   </div>
+                  <div className='flex justify-end'>
+                    <Button className='bg-dark border-dark' onClick={() => onGoToLocation(doc.address.latLang.lat, doc.address.latLang.lng)}>Go There</Button>
+                  </div>
                 </li>
               ))
             )}
@@ -164,10 +167,9 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
             <label className='text-white'>{address}</label>
           </div>
           <div className='flex justify-center pb-2'>
-            <DropDown/>
+            <DropDown />
           </div>
           <div className='input-container'>
-
             <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' value={comment} onChange={handleChange}></textarea>
             <button type='button' className='send-button' onClick={async (event) => { await handleCommentSubmit(event); scrollToBottom(); }}>
               <i className='bi bi-arrow-up'></i>

@@ -1,15 +1,14 @@
-import GoogleMap from "./components/GoogleMap"
-import Chat from "./components/Chat"
-import { useState, useEffect } from 'react'
-import './App.css'
+import GoogleMap from "./components/GoogleMap";
+import Chat from "./components/Chat";
+import { useState, useEffect, useRef } from 'react';
+import './App.css';
 import UserName from './components/userName';
 import CommentBox from './components/CommentBox';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import axios from "axios"
+import axios from "axios";
 import Account from "./components/Account";
 import CrimeBox from './components/crime';
 import LogoutButton from './components/LogOut'; 
-
 
 export type AutocompleteMode = { id: string; label: string };
 
@@ -22,6 +21,14 @@ function App() {
   const [locationTaken, setLocationTaken] = useState<boolean>(false);
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
   const [comments, setComments] = useState<any[]>([]);
+  const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
+
+  const handleGoToLocation = (lat: number, lng: number) => {
+    if (mapRef.current) {
+      console.log("REFFF");
+      mapRef.current.changeMapLocation(lat, lng);
+    }
+  };
 
   const checkUserExists = async () => {
     const storedUsername = localStorage.getItem('username');
@@ -80,7 +87,7 @@ function App() {
     setSelectedMarker({ lat, lng });
     const result = await axios.get(`http://localhost:3000/api/getCommentsByLatLng?lat=${lat}&lng=${lng}`);
     setComments(result.data.comments);
-  }
+  };
 
   const handleCloseCommentBox = () => {
     setLocationTaken(false);
@@ -88,26 +95,22 @@ function App() {
 
   return (
     <div style={{ height: '100vh' }}>
-      {!userExists &&
-      
-      <UserName />
-      
-      }
+      {!userExists && <UserName />}
       {userExists && (
         <>
-          <Account/>
+          <Account />
           <LogoutButton onLogout={logout} />
-          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
-          <Chat comments={comments} address={address} usernameStored={storedUsernames}/> {/*This is for all cases the chat will appear */}
-          {/*<CrimeBox/>*/}
+          <GoogleMap ref={mapRef} onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
+          <Chat onGoToLocation={handleGoToLocation} comments={comments} address={address} usernameStored={storedUsernames} /> {/* This is for all cases the chat will appear */}
+          {/* <CrimeBox /> */}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} comments={comments} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
           {locationTaken && latLng && (
             <CommentBox latLng={latLng} address={address} onClose={handleCloseCommentBox} />
-          )} {/*When a near pin gets dropped bring up the comment box. */}
+          )} {/* When a near pin gets dropped bring up the comment box. */}
         </>
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
