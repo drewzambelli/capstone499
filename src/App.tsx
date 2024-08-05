@@ -9,6 +9,7 @@ import axios from "axios";
 import Account from "./components/Account";
 import CrimeBox from './components/crime';
 import LogoutButton from './components/LogOut'; 
+import SignUp from "./components/SignUp";
 
 export type AutocompleteMode = { id: string; label: string };
 
@@ -21,6 +22,7 @@ function App() {
   const [locationTaken, setLocationTaken] = useState<boolean>(false);
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
   const [comments, setComments] = useState<any[]>([]);
+  const [signUp, setSignUp] = useState<boolean> (false);
   const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
 
   const handleGoToLocation = (lat: number, lng: number) => {
@@ -48,8 +50,8 @@ function App() {
     }
   };
 
-  const checkLocationExists = async (lat: number, lng: number) => {
-    const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
+  const checkLocationExists = async (location: google.maps.LatLngLiteral) => {
+    const result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${location.lng}/lat=${location.lat}`);
     const address = result.data.address;
     try {
       let locationExist = await axios.get(`http://localhost:3000/api/checkComment/address=${address}`);
@@ -76,7 +78,7 @@ function App() {
   };
 
   const handleMapDoubleClick = async (lat: number, lng: number) => {
-    checkLocationExists(lat, lng);
+    checkLocationExists({lat, lng});
     setCommentPosition({ lat, lng });
     let result = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${lng}/lat=${lat}`);
     setAddress(result.data.formatted_address);
@@ -93,15 +95,21 @@ function App() {
     setLocationTaken(false);
   };
 
+
+
+
+
+
   return (
     <div style={{ height: '100vh' }}>
-      {!userExists && <UserName />}
+      {!userExists && !signUp && <UserName setSignUp={setSignUp}/>}
+      {signUp && !userExists &&  <SignUp setSignUp={setSignUp}/>}
       {userExists && (
         <>
           <Account />
           <LogoutButton onLogout={logout} />
           <GoogleMap ref={mapRef} onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
-          <Chat onGoToLocation={handleGoToLocation} comments={comments} address={address} usernameStored={storedUsernames} /> {/* This is for all cases the chat will appear */}
+          <Chat comments={comments} address={address} usernameStored={storedUsernames} /> {/* This is for all cases the chat will appear */}
           {/* <CrimeBox /> */}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} comments={comments} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
           {locationTaken && latLng && (

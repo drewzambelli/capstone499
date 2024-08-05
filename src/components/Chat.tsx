@@ -23,7 +23,6 @@ interface ChatProps {
   lat?: number;
   lng?: number;
   comments: any[];
-  onGoToLocation: (lat: number, lng: number) => void;
 }
 
 const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments, onGoToLocation }) => {
@@ -155,14 +154,13 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
                     <p className='time-stamp'>{doc.address.formatted_address}</p>
                   </div>
                   <div className='flex justify-end'>
-                    <Button className='bg-dark border-dark' onClick={() => onGoToLocation(doc.address.latLang.lat, doc.address.latLang.lng)}>Go There</Button>
                   </div>
                 </li>
               ))
             )}
             <div ref={endOfMessagesRef}></div>
           </ul>
-          <div className='text-center block'>
+          {/* <div className='text-center block'>
             <label className='text-white'>Add Comment To:</label>
             <label className='text-white'>{address}</label>
           </div>
@@ -174,7 +172,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
             <button type='button' className='send-button' onClick={async (event) => { await handleCommentSubmit(event); scrollToBottom(); }}>
               <i className='bi bi-arrow-up'></i>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       {!isChatVisible && (

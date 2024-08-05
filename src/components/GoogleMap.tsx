@@ -10,28 +10,22 @@ import CrimeBox from './crime';
 interface GoogleMapProps {
   onDoubleClick: (lat: number, lng: number) => void;
   onMarkerClick: (lat: number, lng: number) => void;
-  setNewUser?: (lat:number, lng:number) =>void;
 }
 
-const GoogleMap = forwardRef<{ changeMapLocation: (lat: number, lng: number) => void }, GoogleMapProps>(({ onDoubleClick, onMarkerClick, setNewUser }, ref) => {
+const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngLiteral) => void }, GoogleMapProps>(({ onDoubleClick, onMarkerClick}, ref) => {
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
-  const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null);
-  const [commentPosition, setCommentPosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [markers, setMarkers] = useState<Array<{ lat: number; lng: number }>>([]);
+  const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral>({lat:42.345573 , lng:-71.098326});
+  const [markers, setMarkers] = useState<Array<google.maps.LatLngLiteral>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
-  const [currentCenter, setCurrentCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [currentCenter, setCurrentCenter] = useState<google.maps.LatLngLiteral>({lat:42.345573 , lng:-71.098326});
   const mapRef = useRef<google.maps.Map | null>(null);
 
-  if(setNewUser){
-    
-  }
-
   useImperativeHandle(ref, () => ({
-    changeMapLocation(lat: number, lng: number) {
+    changeMapLocation(location: google.maps.LatLngLiteral) {
       if (mapRef.current) {
-        const newCenter = new google.maps.LatLng(lat, lng);
-        setUserLocation({lat,lng})
+        const newCenter = new google.maps.LatLng(location.lat, location.lng);
+        setUserLocation(location)
         mapRef.current.panTo(newCenter);
         mapRef.current.setZoom(15);
       }
@@ -116,7 +110,7 @@ const GoogleMap = forwardRef<{ changeMapLocation: (lat: number, lng: number) => 
         <Map
           ref={mapRef}
           className="map-class"
-          defaultCenter={userLocation as google.maps.LatLngAltitudeLiteral}
+          defaultCenter={userLocation}
           defaultZoom={19}
           gestureHandling={"greedy"}
           disableDefaultUI={true}
@@ -145,7 +139,7 @@ const GoogleMap = forwardRef<{ changeMapLocation: (lat: number, lng: number) => 
           ))}
         </Map>
         <MapHandler place={selectedPlace} />
-        <CrimeBox address="" lat={currentCenter?.lat} lng={currentCenter?.lng} />
+        <CrimeBox address="" lat={currentCenter.lat} lng={currentCenter.lng} />
       </APIProvider>
     </>
   );

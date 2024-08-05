@@ -222,14 +222,13 @@ app.post('/api/postData', async (req, res) => {
                 const inputData = {
                     id: await db.countDocuments() + 1,
                     username: body.userName,
-                    firstname: body.firstName,
-                    lastname: body.lastName,
-                    socketId: body.socketID,
-                    age: parseInt(body.age)
+                    password: body.password,
                 };
-                const result = await db.insertOne(inputData);
+                const result = await db.insertOne(inputData); // Insert the document
                 res.status(200).send(`Data inserted with ID ${result.insertedId}`);
             }
+        } else {
+            res.status(400).send("Invalid request body");
         }
     } catch (error) {
         console.error(error);

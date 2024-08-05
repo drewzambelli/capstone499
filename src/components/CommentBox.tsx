@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import DropDown from './DropDown';
 
 interface CommentBoxProps {
   onClose: () => void;
@@ -15,6 +16,7 @@ interface UserDataFirst {
 }
 
 const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => {
+
   const [userData, setUserData] = useState<UserDataFirst>({
     userName: localStorage.getItem('username'),
     address: { latLang: latLng, formatted_address: address },
@@ -53,21 +55,26 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
   return (
     <div className='comment-class'>
       <h2>You're The First! Leave a comment</h2>
+        <div className='flex justify-center'>
+          <label className='text-center'>Location: {address}</label>
+        </div>
       <form onSubmit={onClose}>
-        <input
-          type="text"
-          name='title'
-          placeholder='Title'
-          value={userData.title}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="comment"
-          placeholder="Enter a comment!"
-          value={userData.comments[0]}
-          onChange={(e) => handleCommentChange(e, 0)}
-        />
+    
+          <input
+            type="text"
+            name='title'
+            placeholder='Title'
+            value={userData.title}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="comment"
+            placeholder="Enter a comment!"
+            value={userData.comments[0]}
+            onChange={(e) => handleCommentChange(e, 0)}
+          />
+        <DropDown/>
         <button type="submit" onClick={handleSubmitButton}>Submit Comment</button>
         <button type="button" className='hide-comment-button' onClick={onClose}>
           Cancel
