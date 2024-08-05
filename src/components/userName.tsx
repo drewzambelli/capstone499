@@ -3,6 +3,9 @@ import io from "socket.io-client"
 import FormRange from 'react-bootstrap/FormRange'
 import { FloatingLabel, Form } from 'react-bootstrap';
 import axios from 'axios';
+import IMAGES from './img/images';
+import Image from 'react-bootstrap';
+import AnimatedLogo from './AnimatedLogo';
 const socket = io("http://localhost:3000");
 
 
@@ -25,7 +28,7 @@ const UserName: React.FC<UsernameProps> =  ({setSignUp}) => {
   })
 
   const [submitted, setSubmitted] = useState<Boolean>(false);
-  const [headerText, setHeaderText] = useState<string>("Welcome To Locally")
+  const [headerText, setHeaderText] = useState<string>("Login to alert Locals! ")
   useEffect(()=>{
     socket.on('connect', ()=>{
       console.log("Socket connected in username: ", socket.id);
@@ -86,7 +89,12 @@ const UserName: React.FC<UsernameProps> =  ({setSignUp}) => {
 
   
   return (
+    <>
+    
     <div className="username-form" >
+      <div className='flex justify-center'>
+        <AnimatedLogo/>
+      </div>
       <h2>{headerText}</h2>
       <form onSubmit={handleSubmit}>
         <FloatingLabel
@@ -108,7 +116,7 @@ const UserName: React.FC<UsernameProps> =  ({setSignUp}) => {
         <button type="submit">Submit</button>
       </form>
     </div>
-
+    </>
     
   );
 };
