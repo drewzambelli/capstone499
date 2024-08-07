@@ -16,9 +16,9 @@
 2. **Add Credentials and API Key:**
    - In the `.env` file, add the following lines:
      ```plaintext
-     MONGO_USERNAME:"username"
-     MONGO_PASSWORD:"password"
-     VITE_GOOGLE_MAPS_API_KEY:"KEY-HERE"
+     MONGO_USERNAME: "username"
+     MONGO_PASSWORD: "password"
+     VITE_GOOGLE_MAPS_API_KEY: "KEY-HERE"
      ```
 
 #### Backend
@@ -30,9 +30,9 @@
 2. **Add Credentials and API Key:**
    - In the `.env` file, add the following lines:
      ```plaintext
-     MONGO_USERNAME="username"
-     MONGO_PASSWORD="password"
-     GOOGLE_MAPS_API_KEY="KEY-HERE"
+     MONGO_USERNAME: "username"
+     MONGO_PASSWORD: "password"
+     GOOGLE_MAPS_API_KEY: "KEY-HERE"
      ```
 
 ## Installation
