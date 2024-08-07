@@ -14,6 +14,7 @@ interface GoogleMapProps {
 
 const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngLiteral) => void }, GoogleMapProps>(({ onDoubleClick, onMarkerClick}, ref) => {
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
+  const [infoAddress, setInfoAddress] = useState<string>('');
   const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral>({lat:42.345573 , lng:-71.098326});
   const [markers, setMarkers] = useState<Array<google.maps.LatLngLiteral>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
@@ -80,7 +81,10 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
   const handleMouseOverMarker = async (marker: { lat: number; lng: number }) => {
     setHoveredMarker(marker);
     const address = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${marker.lng}/lat=${marker.lat}`);
+    const result = await axios.get(`http://localhost:3000/api/getCommentsByLatLng?lat=${marker.lat}&lng=${marker.lng}`);
+    console.log("HANDLE MOUSe",result.data);
     setAddress(address.data.formatted_address);
+    setInfoAddress(result.data.comments[0].title)
   };
 
   const handleMouseOut = () => {
@@ -88,9 +92,6 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
     setAddress('');
   };
 
-  const handleMarkerClick = (marker: { lat: number; lng: number }) => {
-    onMarkerClick(marker.lat, marker.lng);
-  };
 
   const handleDragEnd = async (map: google.maps.Map) => {
     const center = map.getCenter();
@@ -127,10 +128,14 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
         >
           {hoveredMarker && (
             <InfoWindow
+              className='bg-dark text-light'
               pixelOffset={[0,-30]}
               onCloseClick={handleMouseOut}
               position={{ lat: hoveredMarker.lat, lng: hoveredMarker.lng }}
             >
+              <div className='flex justify-center'>
+                <div className="p-2 text-sm leading-tight font-bold">{infoAddress}</div>
+              </div>
               <div className="p-2 text-sm leading-tight">{address}</div>
             </InfoWindow>
           )}
@@ -140,7 +145,6 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
                 position={{ lat: marker.lat, lng: marker.lng }}
                 icon={IMAGES.icon}
                 onMouseOver={() => handleMouseOverMarker(marker)}
-                onClick={() => handleMarkerClick(marker)}
               />
             </div>
           ))}

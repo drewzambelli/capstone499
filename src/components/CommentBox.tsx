@@ -19,7 +19,7 @@ interface UserDataFirst {
 const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => {
 
   const [dataIcon, setDataIcon] = useState<string>("Empty")
-
+  const [errors, setErrors] = useState({ title: '', comment: '' });
   const [userData, setUserData] = useState<UserDataFirst>({
     userName: localStorage.getItem('username'),
     address: { latLang: latLng, formatted_address: address },
@@ -45,17 +45,46 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
     });
   };
 
-  const handleSubmitButton = async () => {
-    console.log("HANDLE COMMENT", dataIcon);
-    const newComment = {
-      userName: userData.userName,
-      address: userData.address,
-      text: userData.comments[0],
-      icon: dataIcon,
-      timestamp: new Date()
-    };
-    console.log("NEW COMMENT", newComment);
-    await axios.post('http://localhost:3000/api/postComment', newComment);
+  const validateInputs = () => {
+    let isValid = true;
+    let errors = { title: '', comment: '' };
+
+    if (!userData.title) {
+      errors.title = 'Title is required';
+      isValid = false;
+    }
+
+    if (!userData.comments[0]) {
+      errors.comment = 'Comment is required';
+      isValid = false;
+    }
+
+    setErrors(errors);
+    return isValid;
+  };
+
+  const handleSubmitButton = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if(validateInputs()){
+      const newComment = {
+        title: userData.title,
+        userName: userData.userName,
+        address: userData.address,
+        text: userData.comments[0],
+        icon: dataIcon,
+        timestamp: new Date()
+      };
+      console.log("NEW COMMENT", newComment);
+      try{
+        await axios.post('http://localhost:3000/api/postComment', newComment);
+        console.log("Comment Posted")
+        onClose();
+      }catch(error){console.error("error posting", error)}
+    }
+    else{
+      console.log("Form is invalid")
+    }
+
   };
 
   return (
@@ -65,21 +94,25 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
           <label className='text-center'>Location: {address}</label>
         </div>
       <form onSubmit={onClose}>
-    
+      {errors.title && <span className='text-red'>{errors.title}</span>}
           <input
+            required
             type="text"
             name='title'
-            placeholder='Title'
+            placeholder='Enter a title! *'
             value={userData.title}
             onChange={handleInputChange}
           />
+          {errors.comment && <span className='text-red'>{errors.comment}</span>}
           <input
+            required
             type="text"
             name="comment"
-            placeholder="Enter a comment!"
+            placeholder="Enter a comment! *"
             value={userData.comments[0]}
             onChange={(e) => handleCommentChange(e, 0)}
           />
+
         <DropDown onIconSelect={setDataIcon}/>
         <button type="submit" onClick={handleSubmitButton}>Submit Comment</button>
         <button type="button" className='hide-comment-button' onClick={onClose}>

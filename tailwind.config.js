@@ -7,7 +7,8 @@ export default {
   theme: {
     colors:{
       "bubble-gum": "#ff7798",
-      "dark-bubble": "#300707"
+      "dark-bubble": "#300707",
+      "red": "#F00"
     },
     extend: {
       fontFamily:{

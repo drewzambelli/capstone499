@@ -25,12 +25,6 @@ function App() {
   const [signUp, setSignUp] = useState<boolean> (false);
   const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
 
-  const handleGoToLocation = (lat: number, lng: number) => {
-    if (mapRef.current) {
-      console.log("REFFF");
-      mapRef.current.changeMapLocation(lat, lng);
-    }
-  };
 
   const checkUserExists = async () => {
     const storedUsername = localStorage.getItem('username');
@@ -93,6 +87,7 @@ function App() {
 
   const handleCloseCommentBox = () => {
     setLocationTaken(false);
+    // window.location.reload() DM: Maybe add this, it reloads the page so that the comments don't stay there
   };
 
 
@@ -108,7 +103,7 @@ function App() {
         <>
           <Account />
           <LogoutButton onLogout={logout} />
-          <GoogleMap ref={mapRef} onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
+          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
           <Chat comments={comments} address={address} usernameStored={storedUsernames} /> {/* This is for all cases the chat will appear */}
           {/* <CrimeBox /> */}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} comments={comments} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}

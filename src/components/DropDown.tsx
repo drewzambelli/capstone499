@@ -130,7 +130,7 @@ const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
                 </Dropdown.Menu>
             </Dropdown>
         </div>
-    <label className='text-white'>Comment Type: {selectedIcon.text}</label>
+    <label className='text-dark'>Comment Type: {selectedIcon.text}</label>
   </div>
   )
 }
