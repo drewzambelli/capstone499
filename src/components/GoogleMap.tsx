@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { APIProvider, InfoWindow, Map, MapMouseEvent, Marker } from '@vis.gl/react-google-maps';
+import { APIProvider, InfoWindow, Map, MapEvent, MapMouseEvent, Marker } from '@vis.gl/react-google-maps';
 import env from '../env/env';
 import Header from './Header';
 import MapHandler from './auto-components/MapHandler';
@@ -103,24 +103,31 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
     }
   };
 
+  const handleMapIdle = (event: MapEvent) =>{
+    if(!mapRef.current && event?.map){
+      mapRef.current == event.map;
+    }
+
+  }
+
   return (
     <>
       <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}>
         <Header onPlaceSelect={setSelectedPlace} />
         <Map
-          ref={mapRef}
+          onIdle={handleMapIdle}
           className="map-class"
           defaultCenter={userLocation}
           defaultZoom={19}
           gestureHandling={"greedy"}
           disableDefaultUI={true}
-          options={{ disableDoubleClickZoom: true }}
+          disableDoubleClickZoom
           onDblclick={handleDoubleClick}
           onDragend={(event) => handleDragEnd(event.map)}
         >
           {hoveredMarker && (
             <InfoWindow
-              options={{ pixelOffset: new google.maps.Size(0, -30) }}
+              pixelOffset={[0,-30]}
               onCloseClick={handleMouseOut}
               position={{ lat: hoveredMarker.lat, lng: hoveredMarker.lng }}
             >

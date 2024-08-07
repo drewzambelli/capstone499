@@ -1,8 +1,8 @@
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import {FaFire } from "react-icons/fa" //Fire icon
-import {IoMdTrain} from "react-icons/io" //Train icon
+// import {IoMdTrain} from "react-icons/io" //Train icon
 import {FaGun} from "react-icons/fa6" //Gun icon
 import { GiPoliceOfficerHead } from "react-icons/gi"; //police icon
 import { MdCelebration } from "react-icons/md"; //celebration icon
@@ -11,15 +11,19 @@ import { IoRestaurant } from "react-icons/io5"; //restuarant icon
 import { IoBusiness } from "react-icons/io5"; //business icon
 import { MdTraffic } from "react-icons/md"; //traffic light
 import { FaCarCrash } from "react-icons/fa"; //car accident
-
-
-
 import { PiEmptyThin } from "react-icons/pi";
-function DropDown() {
+
+interface DropDownProps{
+    onIconSelect: (icon: string) => void;
+
+}
+
+const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
     const [selectedIcon, setSelectedIcon] = useState<{icon: React.ReactNode, text: string}>({icon: <span><PiEmptyThin /></span>, text: "Empty"})
 
-    const handleDropDownItem = (icon : React.ReactNode, text: string) => {
+    const handleDropDownItem = (icon : React.ReactNode, text: string, mongoIcon: string) => {
         setSelectedIcon({icon: icon, text: text});
+        onIconSelect(mongoIcon);
     }
 
   return (
@@ -32,7 +36,7 @@ function DropDown() {
 
                 <Dropdown.Menu>
                     {/* COMMUTE CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaCarCrash />, "Accident")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaCarCrash />, "Accident", "FaCarCrash")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <FaCarCrash />
@@ -42,7 +46,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* COMMUTE CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<IoBusiness />, "Business")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<IoBusiness />, "Business", "IoBusiness")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <IoBusiness  />
@@ -52,7 +56,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* GUN CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaGun/>, "Danger")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaGun/>, "Danger", "FaGun")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <FaGun />
@@ -62,7 +66,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* POOP CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaPoop />, "Poop")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaPoop />, "Poop", "FaPoop")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <FaPoop  />
@@ -72,7 +76,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* CELEBRATION CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<MdCelebration/>, "Festival")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<MdCelebration/>, "Festival", "MdCelebration")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <MdCelebration  />
@@ -82,7 +86,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* FOOD CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<IoRestaurant />, "Restaurant")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<IoRestaurant />, "Restaurant", "IoRestaurant")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <IoRestaurant />
@@ -92,7 +96,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* FIRE CLASS*/}
-                    <Dropdown.Item className='flex justify-center w-auto' href='#' onClick={ () => handleDropDownItem(<FaFire/>, "Fire")}>
+                    <Dropdown.Item className='flex justify-center w-auto' href='#' onClick={ () => handleDropDownItem(<FaFire/>, "Fire", "FaFire")}>
                         <div>
                             <div className='flex justify-center'>
                                 <FaFire  className='text-dark-bubble'/>
@@ -102,7 +106,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* POLICE CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<GiPoliceOfficerHead/>, "Police")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<GiPoliceOfficerHead/>, "Police", "GiPoliceOfficerHead" )}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <GiPoliceOfficerHead />
@@ -112,7 +116,7 @@ function DropDown() {
                     </Dropdown.Item>
 
                     {/* TRAFFIC CLASS*/}
-                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<MdTraffic />, "Traffic")}>
+                    <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<MdTraffic />, "Traffic", "MdTraffic")}>
                     <div className='block'>
                         <div className='flex justify-center'>
                             <MdTraffic  />

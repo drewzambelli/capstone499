@@ -151,11 +151,13 @@ app.post('/api/postComment', async (req, res) => {
     try {
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
-        const { userName, text, address } = req.body;
+        const { userName, text, address, icon } = req.body;
+        console.log("ICON", icon);
 
         const newComment = {
             userName: userName,
             text: text,
+            icon: icon,
             timestamp: new Date()
         };
 

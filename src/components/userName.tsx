@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import io from "socket.io-client"
-import FormRange from 'react-bootstrap/FormRange'
 import { FloatingLabel, Form } from 'react-bootstrap';
 import axios from 'axios';
-import IMAGES from './img/images';
-import Image from 'react-bootstrap';
 import AnimatedLogo from './AnimatedLogo';
 const socket = io("http://localhost:3000");
 
@@ -23,7 +20,6 @@ const UserName: React.FC<UsernameProps> =  ({setSignUp}) => {
     userName: '',
     password: '',
     age: 18,
-
 
   })
 

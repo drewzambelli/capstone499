@@ -12,16 +12,20 @@ interface UserDataFirst {
   userName: string | null,
   address: { latLang: { lat: number, lng: number }, formatted_address: string },
   comments: string[],
-  title: string
+  title: string,
+  icon: React.ReactNode,
 }
 
 const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => {
+
+  const [dataIcon, setDataIcon] = useState<string>("Empty")
 
   const [userData, setUserData] = useState<UserDataFirst>({
     userName: localStorage.getItem('username'),
     address: { latLang: latLng, formatted_address: address },
     comments: [''],
-    title: ''
+    title: '',
+    icon: dataIcon
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,13 +46,15 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
   };
 
   const handleSubmitButton = async () => {
+    console.log("HANDLE COMMENT", dataIcon);
     const newComment = {
       userName: userData.userName,
       address: userData.address,
       text: userData.comments[0],
+      icon: dataIcon,
       timestamp: new Date()
     };
-    // console.log("NEW COMMENT", newComment);
+    console.log("NEW COMMENT", newComment);
     await axios.post('http://localhost:3000/api/postComment', newComment);
   };
 
@@ -74,7 +80,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
             value={userData.comments[0]}
             onChange={(e) => handleCommentChange(e, 0)}
           />
-        <DropDown/>
+        <DropDown onIconSelect={setDataIcon}/>
         <button type="submit" onClick={handleSubmitButton}>Submit Comment</button>
         <button type="button" className='hide-comment-button' onClick={onClose}>
           Cancel

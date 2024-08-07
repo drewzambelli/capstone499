@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
-import DropDown from './DropDown';
-import { Button } from 'react-bootstrap';
+import { FaCarCrash, FaFire, FaPoop } from 'react-icons/fa';
+import { PiEmptyThin } from 'react-icons/pi';
+import { IoBusiness, IoRestaurant } from 'react-icons/io5';
+import { FaGun } from 'react-icons/fa6';
+import { MdCelebration, MdTraffic } from 'react-icons/md';
+import { GiPoliceOfficerHead } from 'react-icons/gi';
 
 function formatTimestamp(timestamp: string) {
   const date = new Date(timestamp);
-  const options = {
+  const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
@@ -25,11 +29,10 @@ interface ChatProps {
   comments: any[];
 }
 
-const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments, onGoToLocation }) => {
-  const [comment, setComment] = useState<string>('');
+const Chat: React.FC<ChatProps> = ({ usernameStored, lat, lng, comments }) => {
   const [docs, setDocs] = useState<any[]>([]);
   const socketRef = useRef<Socket | null>(null);
-  const endOfMessagesRef = useRef<HTMLLIElement | null>(null);
+  const endOfMessagesRef = useRef<HTMLDivElement| null>(null);
   const [isChatVisible, setIsChatVisible] = useState(true);
 
 
@@ -78,28 +81,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
     };
   }, [lat, lng]);
 
-  const handleCommentSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const newComment = {
-        address: {
-          latLang: { lat, lng },
-          formatted_address: address
-        },
-        userName: usernameStored,
-        text: comment,
-        timestamp: new Date()
-      };
-      await axios.post('http://localhost:3000/api/postComment', newComment);
-      setComment(''); // Clears input box after sending
-    } catch (error) {
-      console.error('Error posting comment:', error);
-    }
-  };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setComment(event.target.value);
-  };
 
   const scrollToBottom = () => {
     if (endOfMessagesRef.current) {
@@ -108,7 +90,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
   };
 
   const handleHideChat = () => {
-    const chatContainer = document.querySelector('.chat-container');
+    const chatContainer = document.querySelector('.chat-container') as HTMLElement;
     if (chatContainer) {
       chatContainer.style.opacity = '0';
       setTimeout(() => {
@@ -120,7 +102,7 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
   const handleShowChat = () => {
     setIsChatVisible(true);
     setTimeout(() => {
-      const chatContainer = document.querySelector('.chat-container');
+      const chatContainer = document.querySelector('.chat-container') as HTMLElement;
       if (chatContainer) {
         chatContainer.style.opacity = '1';
       }
@@ -141,11 +123,52 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
         <div>
           <ul className='chat-box'>
             {docs.flatMap((doc, docIndex) =>
-              doc.comments.map((comment, commentIndex) => (
+              doc.comments.map((comment:{
+                userName: string,
+                icon: string,
+                text: string,
+                timestamp: string
+              }
+                
+                , commentIndex: number) => (
                 <li key={`${docIndex}-${commentIndex}`} className={comment.userName === usernameStored ? 'user-message' : ''}>
                   <div className='chat-message'>
-                    <div className='user-name'>
-                      {comment.userName}:
+                    <div className='flex justify-between'>
+                      <div className='user-name'>
+                        {comment.userName}:
+                      </div>
+                      <div>
+                        {comment.icon == "FaFire"? (
+                          <FaFire/>
+                        ):(<></>)}
+                        {comment.icon == "FaPoop"? (
+                          <FaPoop/>
+                        ):(<></>)}  
+                        {comment.icon == "FaCarCrash"? (
+                          <FaCarCrash/>
+                        ):(<></>)}  
+                        {comment.icon == "IoBusiness"? (
+                          <IoBusiness/>
+                        ):(<></>)}  
+                        {comment.icon == "FaGun"? (
+                          <FaGun/>
+                        ):(<></>)}  
+                        {comment.icon == "MdCelebration"? (
+                          <MdCelebration/>
+                        ):(<></>)}  
+                        {comment.icon == "IoRestaurant"? (
+                          <IoRestaurant/>
+                        ):(<></>)}  
+                        {comment.icon == "GiPoliceOfficerHead"? (
+                          <GiPoliceOfficerHead/>
+                        ):(<></>)}  
+                        {comment.icon == "MdTraffic"? (
+                          <MdTraffic/>
+                        ):(<></>)}  
+                        {comment.icon == "PiEmptyThin"? (
+                          <PiEmptyThin/>
+                        ):(<></>)}  
+                      </div>
                     </div>
                     <div className='chat-content'>
                       {comment.text}
@@ -160,19 +183,6 @@ const Chat: React.FC<ChatProps> = ({ usernameStored, address, lat, lng, comments
             )}
             <div ref={endOfMessagesRef}></div>
           </ul>
-          {/* <div className='text-center block'>
-            <label className='text-white'>Add Comment To:</label>
-            <label className='text-white'>{address}</label>
-          </div>
-          <div className='flex justify-center pb-2'>
-            <DropDown />
-          </div>
-          <div className='input-container'>
-            <textarea className='input-field resize-none' placeholder='Enter Thoughts Here!' value={comment} onChange={handleChange}></textarea>
-            <button type='button' className='send-button' onClick={async (event) => { await handleCommentSubmit(event); scrollToBottom(); }}>
-              <i className='bi bi-arrow-up'></i>
-            </button>
-          </div> */}
         </div>
       </div>
       {!isChatVisible && (
