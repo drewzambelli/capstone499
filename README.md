@@ -9,19 +9,16 @@
 
 #### Frontend
 
-1. **Create Environment File:**
-   - Navigate to the `src` folder.
-   - Create a new folder named `env` inside the `src` folder.
-   - Inside the `env` folder, create a file named `env.tsx`.
+1. **Create .env File:**
+   - Navigate to the `capstone499` root project folder.
+   - Create a file named `.env`.
 
-2. **Export Google Maps API Key:**
-   - In the `env.tsx` file, add the following code:
-     ```typescript
-     const env = {
-       GOOGLE_MAPS_API_KEY: "KEY-HERE"
-     }
-
-     export default env;
+2. **Add Credentials and API Key:**
+   - In the `.env` file, add the following lines:
+     ```plaintext
+     MONGO_USERNAME: "username"
+     MONGO_PASSWORD: "password"
+     VITE_GOOGLE_MAPS_API_KEY: "KEY-HERE"
      ```
 
 #### Backend
@@ -33,9 +30,9 @@
 2. **Add Credentials and API Key:**
    - In the `.env` file, add the following lines:
      ```plaintext
-     MONGO_USERNAME="username"
-     MONGO_PASSWORD="password"
-     GOOGLE_MAPS_API_KEY="KEY-HERE"
+     MONGO_USERNAME: "username"
+     MONGO_PASSWORD: "password"
+     GOOGLE_MAPS_API_KEY: "KEY-HERE"
      ```
 
 ## Installation
