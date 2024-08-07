@@ -66,9 +66,6 @@ function App() {
     checkUserExists();
   }, []);
 
-  const handlePlaceSelect = (place: google.maps.places.PlaceResult | null) => {
-    console.log(place); // Just logging for now, adjust as needed
-  };
 
   const handleMapDoubleClick = async (lat: number, lng: number) => {
     checkLocationExists({lat, lng});
@@ -86,7 +83,7 @@ function App() {
 
   const handleCloseCommentBox = () => {
     setLocationTaken(false);
-    // window.location.reload() DM: Maybe add this, it reloads the page so that the comments don't stay there
+    // window.location.reload() //DM: Maybe add this, it reloads the page so that the comments don't stay there
   };
 
 

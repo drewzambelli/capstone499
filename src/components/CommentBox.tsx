@@ -18,7 +18,7 @@ interface UserDataFirst {
 
 const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => {
 
-  const [dataIcon, setDataIcon] = useState<string>("Empty")
+  const [dataIcon, setDataIcon] = useState<string>("PiEmptyThin")
   const [errors, setErrors] = useState({ title: '', comment: '' });
   const [userData, setUserData] = useState<UserDataFirst>({
     userName: localStorage.getItem('username'),
