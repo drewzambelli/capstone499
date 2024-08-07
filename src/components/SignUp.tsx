@@ -7,6 +7,9 @@ interface SignUpProps{
 }
 
 const SignUp: React.FC<SignUpProps> = ({setSignUp}) => {
+
+  const [errors, setErrors] = useState({ title: '', comment: '' });
+
     interface UserData {
         userName: string;
         password: string;
@@ -21,12 +24,15 @@ const SignUp: React.FC<SignUpProps> = ({setSignUp}) => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Prevents the form from reloading
+
+        let v= validateInputs()
+
         console.log(userData);
-        const response = await fetch('http://localhost:3000/api/postData', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData)
-        });
+            const response = await fetch('http://localhost:3000/api/postData', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
 
         if (!response.ok) {
             console.log("USER TAKEN");
@@ -44,30 +50,50 @@ const SignUp: React.FC<SignUpProps> = ({setSignUp}) => {
     };
     const handleCreateAccount = () =>{
         setSignUp(false);
-      }
+    }
+
+    const validateInputs = () => {
+        let isValid = true;
+        let errors = { title: '', comment: '' };
+    
+        if (!userData.userName) {
+            console.log("ERRORRR")
+          errors.title = 'Title is required';
+          isValid = false;
+        }
+    
+        if (!userData.password) {
+          errors.comment = 'Comment is required';
+          isValid = false;
+        }
+    
+        setErrors(errors);
+        return isValid;
+      };
     
 
     return (
         <div className="username-form">
             <h2>Create An Account!</h2>
             <form onSubmit={handleSubmit}>
-            <FloatingLabel
-                label="Enter New Username"
-                className=''>
-                    <Form.Control  placeholder='Enter Username' name="userName" value={userData.userName} onChange={handleInputChange}/>
-            </FloatingLabel>        
-        
-            <FloatingLabel
-                label="Enter New Password"
-                className='my-2'>
-                    <Form.Control type='password' placeholder='Enter New Password' name='password' value={userData.password} onChange={handleInputChange} />
-            </FloatingLabel>
+                {errors.title && <span className='text-red'>{errors.title}</span>}
+                <FloatingLabel
+                    label="Enter New Username *"
+                    className=''>
+                        <Form.Control  placeholder='Enter Username' name="userName"  required value={userData.userName} onChange={handleInputChange}/>
+                </FloatingLabel>        
+                {errors.comment && <span className='text-red'>{errors.comment}</span>}
+                <FloatingLabel
+                    label="Enter New Password *"
+                    className='my-2'>
+                        <Form.Control type='password' placeholder='Enter New Password' name='password' required value={userData.password} onChange={handleInputChange} />
+                </FloatingLabel>
 
 
-            <a  onClick={handleCreateAccount}>
-                <label className='cursor-pointer underline pb-2'>Already have an account?</label>
-            </a>
-                <button type="submit">Submit</button>
+                <a  onClick={handleCreateAccount}>
+                    <label className='cursor-pointer underline pb-2'>Already have an account?</label>
+                </a>
+                    <button type="submit">Submit</button>
             </form>
         </div>
     );
