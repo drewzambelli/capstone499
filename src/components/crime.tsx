@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Papa from 'papaparse';
-import env from '../env/env';
 
 interface CrimeProps {
   address: string;
@@ -12,12 +11,12 @@ interface CrimeProps {
 const CrimeBox: React.FC<CrimeProps> = ({ address, lat, lng }) => {
   const [isCrimeVisible, setIsCrimeVisible] = useState(false);
   const [borough, setBorough] = useState('');
-  const [crimeStats, setCrimeStats] = useState('');
+  const [crimeStats, setCrimeStats] = useState<React.ReactElement>(<></>);
 
   useEffect(() => {
     const getBoroughFromLatLng = async () => {
       try {
-        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${env.GOOGLE_MAPS_API_KEY}`);
+        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`);
         const addressComponents = response.data.results[0].address_components;
         const foundBorough = addressComponents.find(component => component.types.includes('sublocality_level_1'))?.long_name || 'Borough Not Found';
         setBorough(foundBorough);
@@ -72,7 +71,7 @@ const CrimeBox: React.FC<CrimeProps> = ({ address, lat, lng }) => {
   
 
   const handleHideCrime = () => {
-    const crimeContainer = document.querySelector('.crime-container');
+    const crimeContainer = document.querySelector('.crime-container') as HTMLElement;
     if (crimeContainer) {
       crimeContainer.style.opacity = '0';
       setTimeout(() => {
@@ -84,7 +83,7 @@ const CrimeBox: React.FC<CrimeProps> = ({ address, lat, lng }) => {
   const handleShowCrime = () => {
     setIsCrimeVisible(true);
     setTimeout(() => {
-      const crimeContainer = document.querySelector('.crime-container');
+      const crimeContainer = document.querySelector('.crime-container') as HTMLElement;
       if (crimeContainer) {
         crimeContainer.style.opacity = '1';
       }

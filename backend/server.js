@@ -69,6 +69,10 @@ cron.schedule('0 * * * *', async() =>{ //this is what deletes the comments
             { $pull: { comments: { timestamp: { $lt: yesterday } } } }
         );
         console.log("OLD COMMENTS REMOVED");
+
+        const result = await commentsCollection.deleteMany({ $or: [{}, { comments: { $size: 0 } }] });
+        console.log(`Deleted ${result.deletedCount} empty docs`);
+
     }catch(error){
         console.log("error removing old comments", error);
     }

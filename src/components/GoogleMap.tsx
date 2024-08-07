@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { APIProvider, InfoWindow, Map, MapEvent, MapMouseEvent, Marker } from '@vis.gl/react-google-maps';
-import env from '../env/env';
 import Header from './Header';
 import MapHandler from './auto-components/MapHandler';
 import IMAGES from './img/images';
@@ -9,10 +8,9 @@ import CrimeBox from './crime';
 
 interface GoogleMapProps {
   onDoubleClick: (lat: number, lng: number) => void;
-  onMarkerClick: (lat: number, lng: number) => void;
 }
 
-const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngLiteral) => void }, GoogleMapProps>(({ onDoubleClick, onMarkerClick}, ref) => {
+const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngLiteral) => void }, GoogleMapProps>(({ onDoubleClick}, ref) => {
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [infoAddress, setInfoAddress] = useState<string>('');
   const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral>({lat:42.345573 , lng:-71.098326});
@@ -113,7 +111,7 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
 
   return (
     <>
-      <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY}>
+      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Header onPlaceSelect={setSelectedPlace} />
         <Map
           onIdle={handleMapIdle}

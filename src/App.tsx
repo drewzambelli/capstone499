@@ -1,13 +1,12 @@
 import GoogleMap from "./components/GoogleMap";
 import Chat from "./components/Chat";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import UserName from './components/userName';
 import CommentBox from './components/CommentBox';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import axios from "axios";
 import Account from "./components/Account";
-import CrimeBox from './components/crime';
 import LogoutButton from './components/LogOut'; 
 import SignUp from "./components/SignUp";
 
@@ -23,7 +22,7 @@ function App() {
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [signUp, setSignUp] = useState<boolean> (false);
-  const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
+  // const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
 
 
   const checkUserExists = async () => {
@@ -103,7 +102,7 @@ function App() {
         <>
           <Account />
           <LogoutButton onLogout={logout} />
-          <GoogleMap onMarkerClick={handleMarkerClick} onDoubleClick={handleMapDoubleClick} />
+          <GoogleMap onDoubleClick={handleMapDoubleClick} />
           <Chat comments={comments} address={address} usernameStored={storedUsernames} /> {/* This is for all cases the chat will appear */}
           {/* <CrimeBox /> */}
           {commentPosition && <Chat lat={commentPosition.lat} lng={commentPosition.lng} address={address} usernameStored={storedUsernames} comments={comments} />} {/* This is for when there is a commentPosition, the chat appears with all the details */}
