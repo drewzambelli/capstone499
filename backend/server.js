@@ -57,7 +57,7 @@ async function getDatabase() {
     }
 }
 
-cron.schedule('0 * * * *', async() =>{
+cron.schedule('0 * * * *', async() =>{ //this is what deletes the comments
     try{
         const db = await getDatabase();
         const commentsCollection = db.collection('comments');
