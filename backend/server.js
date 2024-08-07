@@ -151,10 +151,11 @@ app.post('/api/postComment', async (req, res) => {
     try {
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
-        const { userName, text, address, icon } = req.body;
+        const { userName, text, address, icon, title } = req.body;
         console.log("ICON", icon);
 
         const newComment = {
+            title: title,
             userName: userName,
             text: text,
             icon: icon,
@@ -199,7 +200,7 @@ app.get('/api/getCommentsByLatLng', async(req,res)=>{
         const database = await getDatabase();
         const commentsCollection = database.collection('comments');
         const comments = await commentsCollection.findOne({"address.latLang.lat": parseFloat(lat), "address.latLang.lng": parseFloat(lng)});
-        res.status(200).send(comments.comments)
+        res.status(200).send(comments)
     }catch(error){
         console.error(error)
         res.status(500).send("ERROR retrieving comments")
