@@ -25,19 +25,25 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
       if (mapRef.current) {
         const newCenter = new google.maps.LatLng(location.lat, location.lng);
         setUserLocation(location)
+        console.log('here 1')
         mapRef.current.panTo(newCenter);
         mapRef.current.setZoom(15);
       }
     }
   }));
 
+  //DZ NOTE: Get User Lat and Long on map load BUT Need series of warnings as GEOLOCATION doesn't work if
+  //user doesn't allow certian location tracking permissions in Google Chrome. 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
           setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
           setCurrentCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
+          //console.log('here 2, lat and long: ', position.coords.latitude, position.coords.longitude)
+
         },
+        
         error => {
           if (error.code === error.PERMISSION_DENIED) {
             console.error('Error getting user location: User denied Geolocation');
@@ -51,7 +57,9 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
       console.error('Geolocation is not supported by this browser.');
     }
   }, []);
+  
 
+  //Grabs marks from database
   useEffect(() => {
     const fetchMarkers = async () => {
       try {
@@ -64,8 +72,12 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
     };
 
     fetchMarkers();
-  }, []); // Fetch markers when the component mounts
+  }, []);
+  
 
+  //DZ - July - this took forever. Grabs lat and long upon 
+  //double click so when comment box appears, we have a lat and
+  //long available for storage (and we can eventually return address)
   const handleDoubleClick = async (event: MapMouseEvent) => {
     const latLng = (event as any).detail?.latLng;
     if (latLng) {
@@ -90,7 +102,9 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
     setAddress('');
   };
 
-
+  //DZ - July - may be unecessary at this point as we grab
+  //lat and long so many times. This just return coords
+  //after user pans the map.
   const handleDragEnd = async (map: google.maps.Map) => {
     const center = map.getCenter();
     if (center) {
@@ -122,7 +136,7 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
           disableDefaultUI={true}
           disableDoubleClickZoom
           onDblclick={handleDoubleClick}
-          onDragend={(event) => handleDragEnd(event.map)}
+          onDragend={(event) => handleDragEnd(event.map)} 
         >
           {hoveredMarker && (
             <InfoWindow

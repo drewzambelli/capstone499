@@ -22,10 +22,12 @@ function App() {
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [signUp, setSignUp] = useState<boolean> (false);
+  const [loading, setLoading] = useState(false); // 8/8/24 DZ fine tune add
   // const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
 
 
   const checkUserExists = async () => {
+    setLoading(true); // 8/8/24 DZ fine tune add
     const storedUsername = localStorage.getItem('username');
     setStoredUsername(storedUsername);
     if (storedUsername) {
@@ -39,6 +41,8 @@ function App() {
       } catch (error) {
         console.error('Error checking user:', error);
         setUserExists(false);
+      } finally {
+        setLoading(false); // 8/8/24 DZ fine tune add
       }
     }
   };
@@ -86,13 +90,9 @@ function App() {
     // window.location.reload() //DM: Maybe add this, it reloads the page so that the comments don't stay there
   };
 
-
-
-
-
-
   return (
     <div style={{ height: '100vh' }}>
+      {loading && <div>Loading...</div>} {/* 8/8/24 DZ fine tune add */}
       {!userExists && !signUp && <UserName setSignUp={setSignUp}/>}
       {signUp && !userExists &&  <SignUp setSignUp={setSignUp}/>}
       {userExists && (
