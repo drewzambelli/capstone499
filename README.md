@@ -1,5 +1,11 @@
 
 ---
+# Team Member Github Name:
+
+# Shihab Alam - SALAM507
+# Dariel Martinez - DMART210
+# Drew Zambelli - DREWZAMBELLI
+
 
 # Project Setup and Installation Guide
 
@@ -70,6 +76,16 @@
    ```sh
    npm run dev
    ```
+
+### BRANCH GUIDE
+
+# 1 - database (main branch we worked from)
+
+# 2 - map-pan-is-a-mess---do-not-use (branch stored failed ideas)
+
+# 3 - trying-to-get-map-pan-to-work---do-not-use (branch stored failed ideas)
+
+# 4 - dev (original development branch)
 
 ---
 
