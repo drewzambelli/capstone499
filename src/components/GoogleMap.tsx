@@ -13,11 +13,11 @@ interface GoogleMapProps {
 const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngLiteral) => void }, GoogleMapProps>(({ onDoubleClick}, ref) => {
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [infoAddress, setInfoAddress] = useState<string>('');
-  const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral>({lat:42.345573 , lng:-71.098326});
+  const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral>({lat:40.7684436 , lng:-73.9645046});
   const [markers, setMarkers] = useState<Array<google.maps.LatLngLiteral>>([]);
   const [hoveredMarker, setHoveredMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<string>('');
-  const [currentCenter, setCurrentCenter] = useState<google.maps.LatLngLiteral>({lat:42.345573 , lng:-71.098326});
+  const [currentCenter, setCurrentCenter] = useState<google.maps.LatLngLiteral>({lat:40.7684436, lng:-73.9645046});
   const mapRef = useRef<google.maps.Map | null>(null);
 
   useImperativeHandle(ref, () => ({
