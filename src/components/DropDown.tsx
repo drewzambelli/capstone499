@@ -26,11 +26,12 @@ const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
         onIconSelect(mongoIcon);
     }
 
+    
   return (
     <div>
         <div className='flex justify-center'>
             <Dropdown className='pr-2'>
-                <Dropdown.Toggle className='bg-bubble-gum ' variant='success' id='dropdown-basic'>
+                <Dropdown.Toggle className='bg-bubble-gum flex ' variant='success' >
                     {selectedIcon.icon}
                 </Dropdown.Toggle>
 

@@ -9,6 +9,7 @@ import axios from "axios";
 import Account from "./components/Account";
 import LogoutButton from './components/LogOut'; 
 import SignUp from "./components/SignUp";
+import Footer from "./components/Footer";
 
 export type AutocompleteMode = { id: string; label: string };
 
@@ -108,6 +109,7 @@ function App() {
           )} {/* When a near pin gets dropped bring up the comment box. */}
         </>
       )}
+      <Footer/>
     </div>
   );
 }

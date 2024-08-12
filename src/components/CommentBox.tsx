@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import DropDown from './DropDown';
+import { FloatingLabel, Form } from 'react-bootstrap';
 
 interface CommentBoxProps {
   onClose: () => void;
@@ -36,8 +37,9 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
     }));
   };
 
-  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
     const { value } = event.target;
+
     setUserData((prevData) => {
       const updatedComments = [...prevData.comments];
       updatedComments[index] = value;
@@ -95,30 +97,24 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onClose, address, latLng }) => 
         </div>
       <form onSubmit={onClose}>
       {errors.title && <span className='text-red'>{errors.title}</span>}
-          <input
-            required
-            type="text"
-            name='title'
-            placeholder='Enter a title! *'
-            value={userData.title}
-            onChange={handleInputChange}
-          />
+          <div className='py-2 w-[12vw]'>
+            <FloatingLabel label="Enter Title*" className=''>
+              <Form.Control required name='title' placeholder='' value={userData.title} onChange={handleInputChange}/>
+            </FloatingLabel>
+          </div>
           {errors.comment && <span className='text-red'>{errors.comment}</span>}
-          <input
-            required
-            type="text"
-            name="comment"
-            placeholder="Enter a comment! *"
-            value={userData.comments[0]}
-            onChange={(e) => handleCommentChange(e, 0)}
-          />
-
+          <div className='w-[12vw] pb-3'> 
+            <FloatingLabel label="Enter Comment *">
+              <Form.Control  style={{height: '100px', resize:'none'}} rows={10} as={"textarea"}  required name='comment' placeholder='' value={userData.comments[0]} onChange={(e) => handleCommentChange(e, 0)}/>
+            </FloatingLabel>
+          </div>
         <DropDown onIconSelect={setDataIcon}/>
         <button type="submit" onClick={handleSubmitButton}>Submit Comment</button>
         <button type="button" className='hide-comment-button' onClick={onClose}>
           Cancel
         </button>
       </form>
+      
     </div>
   );
 };
