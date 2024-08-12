@@ -71,6 +71,16 @@
    npm run dev
    ```
 
+### BRANCH GUIDE
+
+# 1 - database (main branch we worked from)
+
+# 2 - map-pan-is-a-mess---do-not-use (branch stored failed ideas)
+
+# 3 - trying-to-get-map-pan-to-work---do-not-use (brnach stored failed ideas)
+
+# 4 - dev (original development branch)
+
 ---
 
 
