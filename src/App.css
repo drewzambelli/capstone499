@@ -299,6 +299,7 @@
   padding: 10px 15px;
   transition: color .2s ease-in-out; /* Add transition for smooth effect */
   background-color: black;
+  z-index: 9999;
 }
 
 
@@ -555,6 +556,7 @@
   padding: 10px 15px;
   transition: color .2s ease-in-out; /* Add transition for smooth effect */
   background-color: black;
+  z-index: 9999;
 }
 
 .show-crime-button:hover {
