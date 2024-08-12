@@ -3,7 +3,7 @@ import axios from 'axios';
 import Papa from 'papaparse';
 
 interface CrimeProps {
-  address: string;
+  address: string; //may prove to be unecessary
   lat: number;
   lng: number;
 }
@@ -13,6 +13,12 @@ const CrimeBox: React.FC<CrimeProps> = ({ address, lat, lng }) => {
   const [borough, setBorough] = useState('');
   const [crimeStats, setCrimeStats] = useState<React.ReactElement>(<></>);
 
+  //Key function for Crime Stats to work: this is where we retrieve the borough from Google Maps.
+  //The 'sublocality_level_1' is the borough name.
+  //NOTE: Sometimes, this may error because, for whatever reason, for Brooklyn and Staten Island,
+  //Google will occassionally have alternate names/spellings stored for 'sublocality_level_1'
+  //E.G. Instead of returning 'Brooklyn', Google will return 'Kings County' or instead of 
+  //'Staten Island', it will return 'Staten_Island' - it's not wrong, just may screw up our code
   useEffect(() => {
     const getBoroughFromLatLng = async () => {
       try {
@@ -31,6 +37,7 @@ const CrimeBox: React.FC<CrimeProps> = ({ address, lat, lng }) => {
     }
   }, [lat, lng]);
 
+  //Conversion, see note above for possible issue
   const boroughToFileMap = {
     "The Bronx": "../../public/bronx.csv",
     "Brooklyn": "../../public/brooklyn.csv",
@@ -39,6 +46,7 @@ const CrimeBox: React.FC<CrimeProps> = ({ address, lat, lng }) => {
     "Staten Island": "../../public/staten_island.csv"
   };
   
+  //Translation of actual Excels to the website
   const fetchCrimeStats = (boroughName) => {
     const path = boroughToFileMap[boroughName];
     if (!path) {

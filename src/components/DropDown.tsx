@@ -11,7 +11,7 @@ import { IoRestaurant } from "react-icons/io5"; //restuarant icon
 import { IoBusiness } from "react-icons/io5"; //business icon
 import { MdTraffic } from "react-icons/md"; //traffic light
 import { FaCarCrash } from "react-icons/fa"; //car accident
-import { PiEmptyThin } from "react-icons/pi";
+import { PiEmptyThin } from "react-icons/pi"; //Retrieves pins from database
 
 interface DropDownProps{
     onIconSelect: (icon: string) => void;
@@ -36,7 +36,7 @@ const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                    {/* COMMUTE CLASS*/}
+                    {/* ACCIDENT CLASS */}
                     <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaCarCrash />, "Accident", "FaCarCrash")}>
                     <div className='block'>
                         <div className='flex justify-center'>
@@ -46,7 +46,7 @@ const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
                     </div>
                     </Dropdown.Item>
 
-                    {/* COMMUTE CLASS*/}
+                    {/* BUSINESS REVIEW CLASS */}
                     <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<IoBusiness />, "Business", "IoBusiness")}>
                     <div className='block'>
                         <div className='flex justify-center'>
@@ -56,7 +56,7 @@ const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
                     </div>
                     </Dropdown.Item>
 
-                    {/* GUN CLASS*/}
+                    {/* DANGER CLASS */}
                     <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<FaGun/>, "Danger", "FaGun")}>
                     <div className='block'>
                         <div className='flex justify-center'>
@@ -116,7 +116,7 @@ const DropDown: React.FC<DropDownProps> = ({onIconSelect})=> {
                     </div>
                     </Dropdown.Item>
 
-                    {/* TRAFFIC CLASS*/}
+                    {/* TRAFFIC CLASS - possible break this out into two classe. One to rep foot traffic, one to rep vehicle traffic*/}
                     <Dropdown.Item className='flex justify-center' href="#" onClick={ () => handleDropDownItem(<MdTraffic />, "Traffic", "MdTraffic")}>
                     <div className='block'>
                         <div className='flex justify-center'>

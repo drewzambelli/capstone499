@@ -25,7 +25,7 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
       if (mapRef.current) {
         const newCenter = new google.maps.LatLng(location.lat, location.lng);
         setUserLocation(location)
-        console.log('here 1')
+        //console.log('here 1') &&testing
         mapRef.current.panTo(newCenter);
         mapRef.current.setZoom(15);
       }
@@ -34,13 +34,15 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
 
   //DZ NOTE: Get User Lat and Long on map load BUT Need series of warnings as GEOLOCATION doesn't work if
   //user doesn't allow certian location tracking permissions in Google Chrome. 
+  //August: Discovery, if you have an anti-virus program running, it is very likely your IP may be
+  //masked/changed in some way, further messing this up.
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
           setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
           setCurrentCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
-          //console.log('here 2, lat and long: ', position.coords.latitude, position.coords.longitude)
+          //console.log('here 2, lat and long: ', position.coords.latitude, position.coords.longitude) &&testing
 
         },
         
@@ -75,8 +77,7 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
   }, []);
   
 
-  //DZ - July - this took forever. Grabs lat and long upon 
-  //double click so when comment box appears, we have a lat and
+  //Grabs lat and long upon double click so when comment box appears, we have a lat and
   //long available for storage (and we can eventually return address)
   const handleDoubleClick = async (event: MapMouseEvent) => {
     const latLng = (event as any).detail?.latLng;
@@ -88,11 +89,12 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
     }
   };
 
+  //Mouse over pop up on pin
   const handleMouseOverMarker = async (marker: { lat: number; lng: number }) => {
     setHoveredMarker(marker);
     const address = await axios.get(`http://localhost:3000/api/getLocationAddress/lng=${marker.lng}/lat=${marker.lat}`);
     const result = await axios.get(`http://localhost:3000/api/getCommentsByLatLng?lat=${marker.lat}&lng=${marker.lng}`);
-    console.log("HANDLE MOUSe",result.data);
+    //console.log("HANDLE MOUSe",result.data); &&testing
     setAddress(address.data.formatted_address);
     setInfoAddress(result.data.comments[0].title)
   };
@@ -125,13 +127,13 @@ const GoogleMap = forwardRef<{ changeMapLocation: (location: google.maps.LatLngL
 
   return (
     <>
-      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <Header onPlaceSelect={setSelectedPlace} />
+      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}> {/* DEVOLPER'S API KEY CALLED HERE */}
+        <Header onPlaceSelect={setSelectedPlace} /> {/* keep this here, prevents error in loading certain map functionality */}
         <Map
           onIdle={handleMapIdle}
           className="map-class"
           defaultCenter={userLocation}
-          defaultZoom={19}
+          defaultZoom={19} //Good zoom start, don't change
           gestureHandling={"greedy"}
           disableDefaultUI={true}
           disableDoubleClickZoom
