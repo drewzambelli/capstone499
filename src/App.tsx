@@ -10,6 +10,7 @@ import Account from "./components/Account";
 import LogoutButton from './components/LogOut'; 
 import SignUp from "./components/SignUp";
 import Footer from "./components/Footer";
+import { Spinner } from "react-bootstrap";
 
 export type AutocompleteMode = { id: string; label: string };
 
@@ -23,7 +24,7 @@ function App() {
   const [latLng, setLatLng] = useState<{ lat: number; lng: number } | null>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [signUp, setSignUp] = useState<boolean> (false);
-  const [loading, setLoading] = useState(false); // 8/8/24 DZ fine tune add
+  const [loading, setLoading] = useState<boolean>(false); // 8/8/24 DZ fine tune add
   // const mapRef = useRef<{ changeMapLocation: (lat: number, lng: number) => void } | null>(null);
 
 
@@ -93,7 +94,7 @@ function App() {
 
   return (
     <div style={{ height: '100vh' }}>
-      {loading && <div>Loading...</div>} {/* 8/8/24 DZ fine tune add */}
+      {loading && (<div className="h-full w-full flex justify-center items-center"><Spinner animation="border"/></div>)} {/* 8/8/24 DZ fine tune add */}
       {!userExists && !signUp && <UserName setSignUp={setSignUp}/>}
       {signUp && !userExists &&  <SignUp setSignUp={setSignUp}/>}
       {userExists && (
