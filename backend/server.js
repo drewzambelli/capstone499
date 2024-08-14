@@ -28,7 +28,7 @@ const password = encodeURIComponent(pass);
 app.use(cors());
 app.use(express.json());
 
-const CommentSchema = new mongoose.Schema({
+const CommentSchema = new mongoose.Schema({ //actual comment schema
     userName: String,
     address: {
         latLang: { lat: Number, lng: Number },
@@ -57,26 +57,33 @@ async function getDatabase() {
     }
 }
 
-cron.schedule('0 * * * *', async() =>{ //this is what deletes the comments
-    try{
+cron.schedule('0 * * * *', async () => { // Runs every hour
+    try {
         const db = await getDatabase();
         const commentsCollection = db.collection('comments');
         const now = new Date();
         const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
+        // Log the current time and the threshold time for debugging
+        console.log("Current time:", now);
+        console.log("Deleting comments older than:", yesterday);
+
+        // Remove comments older than 24 hours
         await commentsCollection.updateMany(
             {},
             { $pull: { comments: { timestamp: { $lt: yesterday } } } }
         );
-        console.log("OLD COMMENTS REMOVED");
+        console.log("Old comments removed");
 
-        const result = await commentsCollection.deleteMany({ $or: [{}, { comments: { $size: 0 } }] });
+        // Delete documents where the comments array is now empty
+        const result = await commentsCollection.deleteMany({ comments: { $size: 0 } });
         console.log(`Deleted ${result.deletedCount} empty docs`);
 
-    }catch(error){
-        console.log("error removing old comments", error);
+    } catch (error) {
+        console.error("Error removing old comments", error);
     }
-})
+});
+
 
 
 
@@ -167,7 +174,7 @@ app.post('/api/postComment', async (req, res) => {
         };
 
         // Check if a document with the same formatted address exists
-        let existingDoc = await commentsCollection.findOne({ "address.formatted_address": address.formatted_address });
+        let existingDoc = await commentsCollection.findOne({ "address.formatted_address": address.formatted_address }); //check for doc
 
         if (existingDoc) { //check if the address is already in the db and just pushes the comment to the comments array
             const result = await commentsCollection.updateOne(
